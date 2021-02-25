@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
+import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,7 +26,8 @@ import nguyenng.registration.RegistrationDTO;
 @WebServlet(name = "SearchLastnameServlet", urlPatterns = {"/SearchLastnameServlet"})
 public class SearchLastnameServlet extends HttpServlet {
 
-    private final String SEARCH_PAGE = "search.html";
+//    private final String SEARCH_PAGE = "search.html";
+    private final String SEARCH_PAGE = "search.jsp";
     private final String SEARCH_RESULT_PAGE = "search.jsp";
 
     /**
@@ -56,7 +58,7 @@ public class SearchLastnameServlet extends HttpServlet {
             } //end if search Value has value
         } catch (SQLException ex) {
             ex.printStackTrace();
-        } catch (ClassNotFoundException ex) {
+        } catch (NamingException ex) {
             ex.printStackTrace();
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);

@@ -8,6 +8,7 @@ package nguyenng.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -22,7 +23,8 @@ import nguyenng.registration.RegistrationDAO;
 public class LoginServlet extends HttpServlet {
     
     private final String INVALID_PAGE = "invalid.html";
-    private final String SEARCH_PAGE = "search.html";
+//    private final String SEARCH_PAGE = "search.html";
+    private final String SEARCH_PAGE = "search.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -54,7 +56,7 @@ public class LoginServlet extends HttpServlet {
             } //end if Login is click
         } catch (SQLException ex) {
             ex.printStackTrace();
-        } catch (ClassNotFoundException ex) {
+        } catch (NamingException ex) {
             ex.printStackTrace();
         } finally {
             //response.sendRedirect(urL); no security

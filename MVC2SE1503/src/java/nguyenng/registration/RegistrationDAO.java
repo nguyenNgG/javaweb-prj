@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.naming.NamingException;
 import nguyenng.utils.DBHelpers;
 
 /**
@@ -20,8 +21,8 @@ import nguyenng.utils.DBHelpers;
  */
 public class RegistrationDAO implements Serializable {
 
-    public boolean checkLogin(String username, String password) throws 
-            SQLException, ClassNotFoundException {
+    public boolean checkLogin(String username, String password) throws
+            SQLException, NamingException {
         Connection con = null;
         PreparedStatement stm = null;
         ResultSet rs = null;
@@ -32,7 +33,7 @@ public class RegistrationDAO implements Serializable {
             if (con != null) {
                 //2. create SQL String
                 String sql = "Select Username "
-                        + "From tblEmployees "
+                        + "From Registration "
                         + "Where Username = ? And Password = ?";
                 //3. create statement and assign Parameter if any
                 stm = con.prepareStatement(sql);
@@ -67,8 +68,8 @@ public class RegistrationDAO implements Serializable {
         return accountList;
     }
 
-    public void searchLastName(String searchValue) throws SQLException, 
-            ClassNotFoundException {
+    public void searchLastName(String searchValue) throws SQLException,
+            NamingException {
         Connection con = null;
         PreparedStatement stm = null;
         ResultSet rs = null;
@@ -79,8 +80,8 @@ public class RegistrationDAO implements Serializable {
             if (con != null) {
                 //2. Create SQL String
                 String sql = "SELECT Username, Password, LastName, isAdmin "
-                        + "From tblEmployee "
-                        + "Where lastname LIKE ?";
+                        + "From Registration "
+                        + "Where LastName LIKE ?";
                 //3. Create Statement & Assign value to parameter
                 stm = con.prepareStatement(sql);
                 stm.setString(1, "%" + searchValue + "%");
@@ -113,4 +114,37 @@ public class RegistrationDAO implements Serializable {
         }
 
     }
+
+    public boolean deleteAccount(String username)
+            throws SQLException, NamingException {
+        Connection con = null;
+        PreparedStatement stm = null;
+
+        //1. Connect DB
+        try {
+            con = DBHelpers.makeConnection();
+            if (con != null) {
+                //2. Create SQL String
+                String sql = "DELETE FROM Registration "
+                        + "WHERE Username = ?";
+                //3. Create Statement & Assign value to parameter
+                stm = con.prepareStatement(sql);
+                stm.setString(1, username);
+                //4. Execute Update and get int (rows affected - update)
+                int row = stm.executeUpdate();
+                //5. Process result
+                if (row > 0) {
+                    return true;
+                }
+            } //end if con is opened
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return false;
+    } //delete account
 }
