@@ -50,7 +50,7 @@ public class SearchLastnameServlet extends HttpServlet {
             if (searchValue.trim().length() > 0) {
                 RegistrationDAO dao = new RegistrationDAO();
                 dao.searchLastName(searchValue);
-
+                
                 List<RegistrationDTO> result = dao.getAccountList();
                 request.setAttribute("SEARCH_RESULT", result);
                 //send result through Scope
