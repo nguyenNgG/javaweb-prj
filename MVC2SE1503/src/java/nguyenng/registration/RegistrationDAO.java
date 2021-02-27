@@ -102,16 +102,15 @@ public class RegistrationDAO implements Serializable {
                 } //end while traversing result
             } //end if con is opened
         } finally {
-            if (con != null) {
-                con.close();
-            }
             if (rs != null) {
                 rs.close();
             }
             if (stm != null) {
                 stm.close();
             }
-
+            if (con != null) {
+                con.close();
+            }
         }
 
     }
