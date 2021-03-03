@@ -7,26 +7,27 @@ package nguyenng.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import nguyenng.registration.RegistrationDAO;
 
 /**
  *
  * @author bchao
  */
-@WebServlet(name = "DispatchServlet", urlPatterns = {"/DispatchServlet"})
-public class DispatchServlet extends HttpServlet {
+@WebServlet(name = "StartupServlet", urlPatterns = {"/StartupServlet"})
+public class StartupServlet extends HttpServlet {
 
     private final String LOGIN_PAGE = "login.html";
-    private final String LOGIN_CONTROLLER = "LoginServlet";
-    private final String SEARCH_CONTROLLER = "SearchLastnameServlet";
-    private final String DELETE_ACCOUNT_CONTROLLER = "DeleteAccountServlet";
-    private final String UPDATE_ACCOUNT_CONTROLLER = "UpdateAccountServlet";
-    private final String STARTUP_CONTROLLER = "StartupServlet";
+    private final String SEARCH_PAGE = "search.jsp";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -42,21 +43,32 @@ public class DispatchServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         String url = LOGIN_PAGE;
-        String button = request.getParameter("btAction");
+
         try {
-            if (button == null) {
-                //do nothing
-                url = STARTUP_CONTROLLER;
-            } else if (button.equals("Login")) {
-                url = LOGIN_CONTROLLER;
-            } else if (button.equals("Search")) {
-                url = SEARCH_CONTROLLER;
-            } else if (button.equals("del")) {
-                url = DELETE_ACCOUNT_CONTROLLER;
-            } else if (button.equals("Update")) {
-                url = UPDATE_ACCOUNT_CONTROLLER;
-            }
+            //1. Check cookie existed
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                System.out.println("Cookies found.");
+                //2. Get username and password
+                for (Cookie cookie : cookies) {
+                    String username = cookie.getName();
+                    String password = cookie.getValue();
+                    //3. Check if username & password is correct
+                    RegistrationDAO dao = new RegistrationDAO();
+                    boolean result = dao.checkLogin(username, password);
+                    if (result) {
+                        url = SEARCH_PAGE;
+                    }//end if user valid
+                }
+            }//end if cookies existed
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } catch (NamingException ex) {
+            ex.printStackTrace();
         } finally {
+            //dung rd hay redirect cung dc
+            //gia tri luu tru trong cookie k bi mat khi tra response
+//            response.sendRedirect(url);
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
             out.close();

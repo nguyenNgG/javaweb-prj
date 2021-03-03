@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +22,7 @@ import nguyenng.registration.RegistrationDAO;
  * @author bchao
  */
 public class LoginServlet extends HttpServlet {
-    
+
     private final String INVALID_PAGE = "invalid.html";
 //    private final String SEARCH_PAGE = "search.html";
     private final String SEARCH_PAGE = "search.jsp";
@@ -40,7 +41,7 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         //Khong dung shorthand
         PrintWriter out = response.getWriter();
-        
+
         String url = INVALID_PAGE; //default page
 
         String username = request.getParameter("txtUsername");
@@ -52,16 +53,18 @@ public class LoginServlet extends HttpServlet {
             boolean result = dao.checkLogin(username, password);
             if (result) {
                 url = SEARCH_PAGE; //when result is true, set url to SEARCH
-
+                Cookie cookie = new Cookie(username, password);
+                cookie.setMaxAge(30);
+                response.addCookie(cookie);
             } //end if Login is click
         } catch (SQLException ex) {
             ex.printStackTrace();
         } catch (NamingException ex) {
             ex.printStackTrace();
         } finally {
-            //response.sendRedirect(urL); no security
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
+            response.sendRedirect(url); //no security
+//            RequestDispatcher rd = request.getRequestDispatcher(url);
+//            rd.forward(request, response);
             out.close();
         }
     }
