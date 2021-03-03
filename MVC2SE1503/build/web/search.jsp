@@ -11,41 +11,12 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Search</title>
+        <title>JSP Page</title>
     </head>
     <body>
-        <%
-            Cookie cookies[] = request.getCookies();
-
-            if (cookies != null) {
-                String username = "";
-                for (Cookie cookie : cookies) {
-                    String temp = cookie.getName();
-                    if (!temp.equals("JSESSIONID")) {
-                        username = temp;
-                    }
-                }
-                if (username.equals("")) {
-        %>  
-        <jsp:forward page="StartupServlet" />
-        <%
-            }
-        %>
-        Welcome, <%= username%>
-        <%
-            }
-
-        %>
         <h1>Search Page</h1>
         <form action="DispatchServlet">
-            <%                //
-                String lastSearch = request.getParameter("txtSearchValue");
-                if (lastSearch == null) {
-                    lastSearch = "";
-                }
-            %>
-            Search Value <input type="text" name="txtSearchValue" 
-                                value="<%= lastSearch%>" /> <br/>
+            Search Value <input type="text" name="txtSearchValue" value="<%= request.getParameter("txtSearchValue")%>" /> <br/>
             <input type="submit" value="Search" name="btAction" /> <!--Lay tu DispatchServlet -->
         </form> <br/>
         <%
@@ -102,7 +73,7 @@
                                checked
                                <%
                                    }//end if check role
-%>
+                               %>
                                />
                     </td>
                     <td>
@@ -115,7 +86,7 @@
                         <input type="submit" value="Update" name="btAction" />
                     </td>
                 </tr>
-
+                
             </form>
             <%
                 }
@@ -129,6 +100,6 @@
     <%
             }
         } //end if searchValue has a value
-%>
+    %>
 </body>
 </html>
