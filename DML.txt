@@ -1,0 +1,11 @@
+DELETE FROM [Order]
+WHERE ID LIKE '%'
+
+DELETE FROM Order_Details
+WHERE ID LIKE '%' AND PID LIKE '%'
+
+SELECT *
+FROM [Order]
+
+SELECT *
+FROM Order_Details

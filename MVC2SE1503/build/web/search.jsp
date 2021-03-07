@@ -102,7 +102,7 @@
                                checked
                                <%
                                    }//end if check role
-%>
+                               %>
                                />
                     </td>
                     <td>
@@ -123,12 +123,13 @@
         </tbody>
     </table>
 
-    <%        } else {
+    <%        }//end if result existed
+    else {
     %> 
     <h2>No record is matched.</h2>
     <%
             }
         } //end if searchValue has a value
-%>
+    %>
 </body>
 </html>

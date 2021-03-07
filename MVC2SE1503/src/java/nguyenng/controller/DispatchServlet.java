@@ -27,6 +27,14 @@ public class DispatchServlet extends HttpServlet {
     private final String DELETE_ACCOUNT_CONTROLLER = "DeleteAccountServlet";
     private final String UPDATE_ACCOUNT_CONTROLLER = "UpdateAccountServlet";
     private final String STARTUP_CONTROLLER = "StartupServlet";
+    private final String VIEW_BOOKSTORE_CONTROLLER = "ViewBookstoreServlet";
+    private final String ADD_BOOK_TO_CART_CONTROLLER = "AddBookToCartServlet";
+    private final String REMOVE_BOOK_FROM_CART_CONTROLLER = "RemoveBookFromCartServlet";
+    private final String VIEW_CART_PAGE = "viewCart.jsp";
+    private final String CHECKOUT_CONTROLLER = "CheckoutServlet";
+    private final String CREATE_NEW_ACCOUNT_CONTROLLER = "CreateNewAccountServlet";
+    
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -55,6 +63,18 @@ public class DispatchServlet extends HttpServlet {
                 url = DELETE_ACCOUNT_CONTROLLER;
             } else if (button.equals("Update")) {
                 url = UPDATE_ACCOUNT_CONTROLLER;
+            } else if (button.equals("Add to Cart")) {
+                url = ADD_BOOK_TO_CART_CONTROLLER;
+            } else if (button.equals("View Cart")) {
+                url = VIEW_CART_PAGE;
+            } else if (button.equals("Remove Selected Items")) {
+                url = REMOVE_BOOK_FROM_CART_CONTROLLER;
+            } else if (button.equals("View Bookstore")) {
+                url = VIEW_BOOKSTORE_CONTROLLER;
+            } else if (button.equals("Checkout")) {
+                url = CHECKOUT_CONTROLLER;
+            } else if (button.equals("Sign Up")) {
+                url = CREATE_NEW_ACCOUNT_CONTROLLER;
             }
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
