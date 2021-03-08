@@ -30,6 +30,9 @@
         </c:if>
         Welcome, ${username} <br/>
         <a href="createNewAccount.jsp">Click here to go to registration page.</a>
+        <br/>
+        <a href="DispatchServlet?btAction=View+Bookstore">Click here to view bookstore.</a>
+        <br/>
         <h1>Search Page</h1>
         <form action="DispatchServlet">
             Search Value <input type="text" name="txtSearchValue" 
@@ -76,10 +79,15 @@
                                     ${dto.fullname}
                                 </td>
                                 <td>
-                                    ${dto.role}
+                                    <input type="checkbox" name="chkAdmin" value="ON"
+                                           <c:if test="${dto.role}">
+                                               checked
+                                           </c:if>
+                                           />
                                 </td>
                                 <td>
-                                    <c:set var="urlRewriting" value="DispatchServlet?btAction=del&pk=${dto.username}&lastSearch=${searchValue}"/>
+                                    <c:set var="urlRewriting" 
+                                           value="DispatchServlet?btAction=del&pk=${dto.username}&lastSearch=${searchValue}"/>
                                     <a href="${urlRewriting}">Delete</a>
                                 </td>
                                 <td>

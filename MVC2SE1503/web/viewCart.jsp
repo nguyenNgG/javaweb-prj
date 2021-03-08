@@ -7,6 +7,7 @@
 <%@page import="java.util.Map"%>
 <%@page import="nguyenng.cart.CartObj"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -76,11 +77,28 @@
 
         <form action="DispatchServlet" method="POST">
             <br/>
-            Name   <input type="text" name="txtCustName" value="" />
+            <c:set var="errors" value="${requestScope.INSERT_ERRS}"/>
+            Name   <input type="text" name="txtCustName" value="${param.txtCustName}" /> (2-50 chars.)
             <br/>
-            Address <input type="text" name="txtAddress" value="" />
-            <br/><br/>
+            <c:if test="${not empty errors}">
+                <c:if test="${not empty errors.nameLengthErr}">
+                    <font color="red">
+                    ${errors.nameLengthErr}
+                    </font> <br/>
+                </c:if>
+            </c:if>
+            Address <input type="text" name="txtAddress" value="${param.txtAddress}" /> (10-60 chars.)
+            <br/>
+            <c:if test="${not empty errors}">
+                <c:if test="${not empty errors.addressLengthErr}">
+                    <font color="red">
+                    ${errors.addressLengthErr}
+                    </font> <br/>
+                </c:if>
+            </c:if><br/>
             <input type="submit" value="Checkout" name="btAction" />
+            <input type="reset" value="Reset" /> <br/>
+            <a href="DispatchServlet">Click here to return to login page.</a>
         </form>
 
         <%  //                      

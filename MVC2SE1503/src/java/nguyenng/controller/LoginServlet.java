@@ -54,13 +54,13 @@ public class LoginServlet extends HttpServlet {
             if (result) {
                 url = SEARCH_PAGE; //when result is true, set url to SEARCH
                 Cookie cookie = new Cookie(username, password);
-                cookie.setMaxAge(30);
+                cookie.setMaxAge(60);
                 response.addCookie(cookie);
             } //end if Login is click
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            log("LoginServlet: SQLException " + ex.getMessage());
         } catch (NamingException ex) {
-            ex.printStackTrace();
+            log("LoginServlet: NamingException " + ex.getMessage());
         } finally {
             response.sendRedirect(url); //no security
 //            RequestDispatcher rd = request.getRequestDispatcher(url);

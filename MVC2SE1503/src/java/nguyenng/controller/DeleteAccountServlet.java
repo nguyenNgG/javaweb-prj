@@ -54,9 +54,9 @@ public class DeleteAccountServlet extends HttpServlet {
                 
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            log("DeleteAccountServlet: SQLException " + ex.getMessage());
         } catch (NamingException ex) {
-            ex.printStackTrace();
+            log("DeleteAccountServlet: NamingException " + ex.getMessage());
         } finally {
             response.sendRedirect(url);
             //k dung requestdispatcher de tranh bi trung parameter btAction

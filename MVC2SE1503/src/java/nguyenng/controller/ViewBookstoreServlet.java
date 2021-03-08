@@ -50,11 +50,9 @@ public class ViewBookstoreServlet extends HttpServlet {
             List<ProductDTO> result = dao.getProductList();
             request.setAttribute("BOOKSTORE_VIEW", result);
         } catch (SQLException ex) {
-            //to do catch
-            ex.printStackTrace();
+            log("ViewBookstoreServlet: SQLException " + ex.getMessage());
         } catch (NamingException ex) {
-            //to do catch
-            ex.printStackTrace();
+            log("ViewBookstoreServlet: NamingException " + ex.getMessage());
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);

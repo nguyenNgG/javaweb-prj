@@ -59,9 +59,9 @@ public class UpdateAccountServlet extends HttpServlet {
                         + "&txtSearchValue=" + searchValue;
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            log("UpdateAccountServlet: SQLException " + ex.getMessage());
         } catch (NamingException ex) {
-            ex.printStackTrace();
+            log("UpdateAccountServlet: NamingException " + ex.getMessage());
         } finally {
             response.sendRedirect(url);
             out.close();

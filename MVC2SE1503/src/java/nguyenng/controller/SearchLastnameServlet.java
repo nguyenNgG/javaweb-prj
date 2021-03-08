@@ -57,9 +57,9 @@ public class SearchLastnameServlet extends HttpServlet {
                 url = SEARCH_RESULT_PAGE;
             } //end if search Value has value
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            log("SearchLastnameServlet: SQLException " + ex.getMessage());
         } catch (NamingException ex) {
-            ex.printStackTrace();
+            log("SearchLastnameServlet: NamingException " + ex.getMessage());
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
