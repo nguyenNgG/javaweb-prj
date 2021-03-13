@@ -15,6 +15,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import nguyenng.registration.RegistrationDAO;
 
 /**
@@ -53,9 +54,16 @@ public class LoginServlet extends HttpServlet {
             boolean result = dao.checkLogin(username, password);
             if (result) {
                 url = SEARCH_PAGE; //when result is true, set url to SEARCH
-                Cookie cookie = new Cookie(username, password);
-                cookie.setMaxAge(60);
-                response.addCookie(cookie);
+                HttpSession session = request.getSession(true);
+                //can luu tru thi can vung nho cap nhat
+                session.setAttribute("USER_USERNAME", username);
+                //truyen fullname vao, su dung dao
+                session.setAttribute("USER_FULLNAME", dao);
+//                Cookie cookie = new Cookie(username, password);
+//                cookie.setMaxAge(60);
+//                response.addCookie(cookie);
+//                cookie de remember password, session de quan ly 
+//                quy trinh van hanh network (thao tac)
             } //end if Login is click
         } catch (SQLException ex) {
             log("LoginServlet: SQLException " + ex.getMessage());

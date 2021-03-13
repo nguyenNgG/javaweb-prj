@@ -182,7 +182,43 @@ public class RegistrationDAO implements Serializable {
         return false;
     }//update account
 
-    public boolean insertRecord(String username, String password, String lastname, boolean role) throws SQLException, NamingException {
+//    public boolean insertRecord(String username, String password, String lastname, boolean role) throws SQLException, NamingException {
+//        Connection con = null;
+//        PreparedStatement stm = null;
+//
+//        try {
+//            //1. Connect DB
+//            con = DBHelpers.makeConnection();
+//            if (con != null) {
+//                //2. Create SQL String
+//                String sql = "INSERT INTO Registration"
+//                        + "(Username, Password, lastName, isAdmin) "
+//                        + "VALUES(?, ?, ?, ?)";
+//                //3. Create Statement
+//                stm = con.prepareStatement(sql);
+//                stm.setString(1, username);
+//                stm.setString(2, password);
+//                stm.setString(3, lastname);
+//                stm.setBoolean(4, role);
+//                //4. Execute Update and get int
+//                int rs = stm.executeUpdate();
+//                //5. Process result (int)
+//                if (rs > 0) {
+//                    return true;
+//                } //end if rs existed
+//            } //end if con existed
+//        } finally {
+//            if (stm != null) {
+//                stm.close();
+//            }
+//            if (con != null) {
+//                con.close();
+//            }
+//        }
+//        return false;
+//    }
+    public boolean createNewAccount(String username, String password, String fullName, boolean role) 
+            throws SQLException, NamingException {
         Connection con = null;
         PreparedStatement stm = null;
 
@@ -191,19 +227,19 @@ public class RegistrationDAO implements Serializable {
             con = DBHelpers.makeConnection();
             if (con != null) {
                 //2. Create SQL String
-                String sql = "INSERT INTO Registration"
-                        + "(Username, Password, lastName, isAdmin) "
+                String sql = "INSERT INTO "
+                        + "Registration(Username, Password, lastName, isAdmin) "
                         + "VALUES(?, ?, ?, ?)";
                 //3. Create Statement
                 stm = con.prepareStatement(sql);
                 stm.setString(1, username);
                 stm.setString(2, password);
-                stm.setString(3, lastname);
+                stm.setString(3, fullName);
                 stm.setBoolean(4, role);
                 //4. Execute Update and get int
-                int rs = stm.executeUpdate();
+                int row = stm.executeUpdate();
                 //5. Process result (int)
-                if (rs > 0) {
+                if (row > 0) {
                     return true;
                 } //end if rs existed
             } //end if con existed

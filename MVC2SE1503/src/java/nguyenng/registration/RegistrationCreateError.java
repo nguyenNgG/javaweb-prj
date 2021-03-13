@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package nguyenng.registration;
 
 import java.io.Serializable;
@@ -12,12 +11,15 @@ import java.io.Serializable;
  *
  * @author bchao
  */
-public class RegistrationInsertError implements Serializable{
+public class RegistrationCreateError implements Serializable{
     private String usernameLengthErr;
     private String passwordLengthErr;
     private String confirmNotMatchErr;
-    private String fullNameLengthErr;
+    private String fullnameLengthErr;
     private String usernameIsExistedErr;
+
+    public RegistrationCreateError() {
+    }
 
     /**
      * @return the usernameLengthErr
@@ -62,17 +64,17 @@ public class RegistrationInsertError implements Serializable{
     }
 
     /**
-     * @return the fullNameLengthErr
+     * @return the fullnameLengthErr
      */
-    public String getFullNameLengthErr() {
-        return fullNameLengthErr;
+    public String getFullnameLengthErr() {
+        return fullnameLengthErr;
     }
 
     /**
-     * @param fullNameLengthErr the fullNameLengthErr to set
+     * @param fullnameLengthErr the fullnameLengthErr to set
      */
-    public void setFullNameLengthErr(String fullNameLengthErr) {
-        this.fullNameLengthErr = fullNameLengthErr;
+    public void setFullnameLengthErr(String fullnameLengthErr) {
+        this.fullnameLengthErr = fullnameLengthErr;
     }
 
     /**

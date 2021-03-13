@@ -5,19 +5,12 @@
             <url>src/java/nguyenng/controller/LoginServlet.java</url>
             <bookmark id="1">
                 <name/>
-                <line>57</line>
+                <line>63</line>
                 <key/>
             </bookmark>
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/controller/CreateNewAccountServlet.java</file>
-            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/registration/RegistrationInsertError.java</file>
-            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/web/viewCart.jsp</file>
-            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/web/createNewAccount.jsp</file>
-            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/order/OrderInsertErr.java</file>
-            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/controller/CheckoutServlet.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

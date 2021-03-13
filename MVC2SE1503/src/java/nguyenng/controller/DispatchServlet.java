@@ -32,7 +32,7 @@ public class DispatchServlet extends HttpServlet {
     private final String REMOVE_BOOK_FROM_CART_CONTROLLER = "RemoveBookFromCartServlet";
     private final String VIEW_CART_PAGE = "viewCart.jsp";
     private final String CHECKOUT_CONTROLLER = "CheckoutServlet";
-    private final String CREATE_NEW_ACCOUNT_CONTROLLER = "CreateNewAccountServlet";
+    private final String CREATE_NEW_ACCOUNT_CONTROLLER = "CreateAccountServlet";
     
 
     /**
@@ -73,7 +73,7 @@ public class DispatchServlet extends HttpServlet {
                 url = VIEW_BOOKSTORE_CONTROLLER;
             } else if (button.equals("Checkout")) {
                 url = CHECKOUT_CONTROLLER;
-            } else if (button.equals("Sign Up")) {
+            } else if (button.equals("Create New Account")) {
                 url = CREATE_NEW_ACCOUNT_CONTROLLER;
             }
         } finally {

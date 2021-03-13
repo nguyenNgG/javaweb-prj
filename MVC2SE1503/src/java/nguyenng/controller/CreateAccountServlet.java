@@ -17,18 +17,18 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import nguyenng.registration.RegistrationCreateError;
 import nguyenng.registration.RegistrationDAO;
-import nguyenng.registration.RegistrationInsertError;
 
 /**
  *
  * @author bchao
  */
-@WebServlet(name = "CreateNewAccountServlet", urlPatterns = {"/CreateNewAccountServlet"})
-public class CreateNewAccountServlet extends HttpServlet {
+@WebServlet(name = "CreateAccountServlet", urlPatterns = {"/CreateAccountServlet"})
+public class CreateAccountServlet extends HttpServlet {
 
+    private final String ERROR_PAGE = "createNewAccount.jsp";
     private final String LOGIN_PAGE = "login.html";
-    private final String INSERT_ERROR_PAGE = "createNewAccount.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -47,44 +47,49 @@ public class CreateNewAccountServlet extends HttpServlet {
         String username = request.getParameter("txtUsername");
         String password = request.getParameter("txtPassword");
         String confirm = request.getParameter("txtConfirm");
-        String fullname = request.getParameter("txtFullName");
+        String fullname = request.getParameter("txtFullname");
 
-        boolean bErr = false;
-        RegistrationInsertError errors = new RegistrationInsertError();
-        String url = INSERT_ERROR_PAGE;
+        String url = ERROR_PAGE;
+        RegistrationCreateError errors = new RegistrationCreateError();
+        boolean foundErr = false;
+
         try {
-            if (username.trim().length() < 6 | username.trim().length() > 12) {
-                bErr = true;
-                errors.setUsernameLengthErr("Username must have a length of 6-12 characters");
+            //1. Check valid user input
+            if (username.trim().length() < 6 || username.trim().length() > 30) {
+                foundErr = true;
+                errors.setUsernameLengthErr("Username requires input from 6 to 30 characters.");
             }
-            if (password.trim().length() < 6 | password.trim().length() > 30) {
-                bErr = true;
-                errors.setPasswordLengthErr("Password must have a length of 6-30 characters");
-            } else if (!confirm.trim().equals(password)) {
-                bErr = true;
-                errors.setConfirmNotMatchErr("Confirm password must match password.");
+            if (password.trim().length() < 6 || password.trim().length() > 30) {
+                foundErr = true;
+                errors.setPasswordLengthErr("Password requires input from 6 to 20 characters.");
+            } else if (!password.trim().equals(confirm.trim())) {
+                foundErr = true;
+                errors.setConfirmNotMatchErr("Confirm must match password");
             }
-            if (fullname.trim().length() < 2 | fullname.trim().length() > 50) {
-                bErr = true;
-                errors.setFullNameLengthErr("Full name must have a length of 2-50 characters");
+            if (fullname.trim().length() < 2 || fullname.trim().length() > 50) {
+                foundErr = true;
+                errors.setFullnameLengthErr("Full name requires input from 6 to 30 characters.");
             }
-
-            if (bErr) {
-                request.setAttribute("INSERT_ERRS", errors);
+            
+            if (foundErr) {
+                request.setAttribute("CREATE_ERROR", errors);
             } else {
                 RegistrationDAO dao = new RegistrationDAO();
-                boolean result = dao.insertRecord(username, password, fullname, false);
-
+                boolean result = dao.createNewAccount(username, password, fullname, false);
                 if (result) {
                     url = LOGIN_PAGE;
-                }
+                } //if create successfully
             }
         } catch (SQLException ex) {
-            log("CreateNewAccountServlet: SQLException " + ex.getMessage());
-            errors.setUsernameIsExistedErr("Username " + username + " has already existed.");
-            request.setAttribute("INSERT_ERRS", errors);
+            String errMsg = ex.getMessage();
+            log("CreateAccountServlet _ SQLException: " + ex.getCause());
+            if (errMsg.contains("duplicate")) {
+                errors.setUsernameIsExistedErr(username + " existed.");
+                request.setAttribute("CREATE_ERROR", errors);
+            }
         } catch (NamingException ex) {
-            log("CreateNewAccountServlet: NamingException " + ex.getMessage());
+            log("CreateAccountServlet _ NamingException: " + ex.getCause());
+            //getCause dua stack trace
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
