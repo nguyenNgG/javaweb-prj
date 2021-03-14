@@ -14,7 +14,7 @@
     </head>
     <body>
         <h1>Create a new Account</h1>
-        <form action="DispatchServlet" method="POST">
+        <form action="createAccount" method="POST">
             <c:set var="errors" value="${requestScope.CREATE_ERROR}"/>
             Username <input type="text" name="txtUsername" value="${param.txtUsername}" /> (6-30 chars.) <br/> 
             <c:if test="${not empty errors.usernameLengthErr}">
@@ -47,6 +47,7 @@
             <font color="red">
             ${errors.usernameIsExistedErr} <br/>
             </font>
-        </c:if>
+        </c:if> <br/>
+        <a href="default">Click here to exit creating account.</a>
     </body>
 </html>

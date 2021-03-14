@@ -5,12 +5,26 @@
             <url>src/java/nguyenng/controller/LoginServlet.java</url>
             <bookmark id="1">
                 <name/>
-                <line>63</line>
+                <line>69</line>
                 <key/>
             </bookmark>
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/controller/DispatchServlet.java</file>
+            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/controller/LogoutServlet.java</file>
+            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/filter/DispatchFilter.java</file>
+            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/controller/CheckoutServlet.java</file>
+            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/controller/CreateAccountServlet.java</file>
+            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/controller/DeleteAccountServlet.java</file>
+            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/controller/LoginServlet.java</file>
+            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/controller/SearchOrderServlet.java</file>
+            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/controller/UpdateAccountServlet.java</file>
+            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/controller/ViewBookstoreServlet.java</file>
+            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/controller/StartupServlet.java</file>
+            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/controller/RemoveBookFromCartServlet.java</file>
+            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/controller/SearchLastnameServlet.java</file>
+        </group>
     </open-files>
 </project-private>

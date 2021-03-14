@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,11 +23,12 @@ import nguyenng.registration.RegistrationDAO;
  *
  * @author bchao
  */
+@WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
 public class LoginServlet extends HttpServlet {
 
-    private final String INVALID_PAGE = "invalid.html";
+    private final String INVALID_PAGE = "invalid";
+    private final String SEARCH_PAGE = "searchPage";
 //    private final String SEARCH_PAGE = "search.html";
-    private final String SEARCH_PAGE = "search.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -58,7 +60,11 @@ public class LoginServlet extends HttpServlet {
                 //can luu tru thi can vung nho cap nhat
                 session.setAttribute("USER_USERNAME", username);
                 //truyen fullname vao, su dung dao
-                session.setAttribute("USER_FULLNAME", dao);
+                String fullname = dao.getFullName(username);
+                if (fullname == null) {
+                    fullname = username + " (username)";
+                }
+                session.setAttribute("USER_FULLNAME", fullname);
 //                Cookie cookie = new Cookie(username, password);
 //                cookie.setMaxAge(60);
 //                response.addCookie(cookie);
@@ -66,11 +72,11 @@ public class LoginServlet extends HttpServlet {
 //                quy trinh van hanh network (thao tac)
             } //end if Login is click
         } catch (SQLException ex) {
-            log("LoginServlet: SQLException " + ex.getMessage());
+            log("LoginServlet _ SQLException: " + ex.getCause());
         } catch (NamingException ex) {
-            log("LoginServlet: NamingException " + ex.getMessage());
+            log("LoginServlet _ NamingException: " + ex.getCause());
         } finally {
-            response.sendRedirect(url); //no security
+//            response.sendRedirect(url); //no security
 //            RequestDispatcher rd = request.getRequestDispatcher(url);
 //            rd.forward(request, response);
             out.close();

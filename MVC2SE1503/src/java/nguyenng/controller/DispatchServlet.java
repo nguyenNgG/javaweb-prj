@@ -7,7 +7,9 @@ package nguyenng.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -33,7 +35,8 @@ public class DispatchServlet extends HttpServlet {
     private final String VIEW_CART_PAGE = "viewCart.jsp";
     private final String CHECKOUT_CONTROLLER = "CheckoutServlet";
     private final String CREATE_NEW_ACCOUNT_CONTROLLER = "CreateAccountServlet";
-    
+    private final String LOGOUT_CONTROLLER = "LogoutServlet";
+    private final String SEARCH_ORDER_CONTROLLER = "SearchOrderServlet";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -51,6 +54,7 @@ public class DispatchServlet extends HttpServlet {
 
         String url = LOGIN_PAGE;
         String button = request.getParameter("btAction");
+
         try {
             if (button == null) {
                 //do nothing
@@ -75,10 +79,14 @@ public class DispatchServlet extends HttpServlet {
                 url = CHECKOUT_CONTROLLER;
             } else if (button.equals("Create New Account")) {
                 url = CREATE_NEW_ACCOUNT_CONTROLLER;
+            } else if (button.equals("Logout")) {
+                url = LOGOUT_CONTROLLER;
+            } else if (button.equals("Search Order")) {
+                url = SEARCH_ORDER_CONTROLLER;
             }
         } finally {
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
+//            RequestDispatcher rd = request.getRequestDispatcher(url);
+//            rd.forward(request, response);
             out.close();
         }
     }

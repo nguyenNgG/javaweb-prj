@@ -28,7 +28,7 @@ import nguyenng.product.ProductDTO;
 @WebServlet(name = "ViewBookstoreServlet", urlPatterns = {"/ViewBookstoreServlet"})
 public class ViewBookstoreServlet extends HttpServlet {
 
-    private final String SHOPPING_PAGE = "bookstore.jsp";
+    private final String SHOPPING_PAGE = "bookstore";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -54,8 +54,9 @@ public class ViewBookstoreServlet extends HttpServlet {
         } catch (NamingException ex) {
             log("ViewBookstoreServlet: NamingException " + ex.getMessage());
         } finally {
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
+//            RequestDispatcher rd = request.getRequestDispatcher(url);
+//            rd.forward(request, response);
+//            response.sendRedirect(url);
             out.close();
         }
     }

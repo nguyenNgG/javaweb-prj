@@ -26,9 +26,8 @@ import nguyenng.registration.RegistrationDTO;
 @WebServlet(name = "SearchLastnameServlet", urlPatterns = {"/SearchLastnameServlet"})
 public class SearchLastnameServlet extends HttpServlet {
 
+    private final String SEARCH_PAGE = "searchPage";
 //    private final String SEARCH_PAGE = "search.html";
-    private final String SEARCH_PAGE = "search.jsp";
-    private final String SEARCH_RESULT_PAGE = "search.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -54,15 +53,15 @@ public class SearchLastnameServlet extends HttpServlet {
                 List<RegistrationDTO> result = dao.getAccountList();
                 request.setAttribute("SEARCH_RESULT", result);
                 //send result through Scope
-                url = SEARCH_RESULT_PAGE;
+                url = SEARCH_PAGE;
             } //end if search Value has value
         } catch (SQLException ex) {
-            log("SearchLastnameServlet: SQLException " + ex.getMessage());
+            log("SearchLastnameServlet _ SQLException: " + ex.getCause());
         } catch (NamingException ex) {
-            log("SearchLastnameServlet: NamingException " + ex.getMessage());
+            log("SearchLastnameServlet _ NamingException: " + ex.getCause());
         } finally {
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
+//            RequestDispatcher rd = request.getRequestDispatcher(url);
+//            rd.forward(request, response);
             out.close();
         }
     }

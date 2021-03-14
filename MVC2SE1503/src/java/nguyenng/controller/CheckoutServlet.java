@@ -10,8 +10,6 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -35,8 +33,8 @@ public class CheckoutServlet extends HttpServlet {
 
 //    private final String VIEW_BOOKSTORE_CONTROLLER = "DispatchServlet"
 //            + "?btAction=View+Bookstore";
-    private final String INVOICE_PAGE = "orderInvoice.jsp";
-    private final String VIEW_CART_PAGE = "viewCart.jsp";
+    private final String INVOICE_PAGE = "invoicePage";
+    private final String VIEW_CART_PAGE = "viewCart";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -58,7 +56,40 @@ public class CheckoutServlet extends HttpServlet {
         String custAddress = request.getParameter("txtAddress");
         OrderInsertErr errors = new OrderInsertErr();
 
+        //new DAO
+        ProductDAO pdDAO = new ProductDAO();
+        OrderDAO odDAO = new OrderDAO();
+        Order_DetailsDAO od_dDAO = new Order_DetailsDAO();
+
+        //create orderID
+        //orderID format is ORDERx
+        //x is randomly generated number between 0 and 2000
+        //a DAO methods check if the orderID is taken
+        //if taken, generate another one and try checking again
+        //if there are no more available IDs to assign
+        //log to server and break
+        String orderID = "";
+        Random rand = new Random();
+        int idCount = 0;
         try {
+            do {
+                int randInt = rand.nextInt(3000);
+                orderID = "ORDER" + randInt;
+                ++idCount;
+                if (idCount > 3001) {
+                    log("No more available IDs.");
+                    break;
+                }
+            } while (odDAO.isOrderIDTaken(orderID));
+            //end while if available order ID is found
+        } catch (SQLException ex) {
+            log("CheckoutServlet _ SQLException " + ex.getMessage() + "\n" + ex.getCause());
+        } catch (NamingException ex) {
+            log("CheckoutServlet _ NamingException " + ex.getCause());
+        }
+
+        try {
+
             if (custName.trim().length() < 2 || custName.trim().length() > 50) {
                 bErr = true;
                 errors.setNameLengthErr("Name must have a length of 2-50 characters");
@@ -68,7 +99,7 @@ public class CheckoutServlet extends HttpServlet {
                 errors.setAddressLengthErr("Address must have a length of 6-30 characters");
             }
             if (bErr) {
-                request.setAttribute("INSERT_ERRS", errors);
+                request.setAttribute("CHECKOUT_ERROR", errors);
             } else {
                 //1. Cust goes to cart place
                 HttpSession session = request.getSession(false);
@@ -79,57 +110,64 @@ public class CheckoutServlet extends HttpServlet {
                         //3. Cust get items in cart
                         Map<String, Integer> items = cart.getItems();
                         if (items != null) {
-                            //new DAO
-                            ProductDAO pdDAO = new ProductDAO();
-                            OrderDAO odDAO = new OrderDAO();
-                            Order_DetailsDAO od_dDAO = new Order_DetailsDAO();
 
-                            //create orderID
-                            String orderID = "";
-                            Random rand = new Random();
-                            do {
-                                int randInt = rand.nextInt(2000);
-                                orderID = "ORDER" + randInt;
-                            } while (odDAO.isOrderIDTaken(orderID));
-                            //end while if available order ID is found
-
-                            //order table
+                            //order table:
                             //orderID
-                            //Name
-                            //Address
+                            //custName
+                            //custAddress
                             //
                             //
                             //call method
                             boolean addOrder_result = odDAO.addOrder(orderID, custName, custAddress);
+                            if (addOrder_result) {
+                                //4. Traverse each item to save to DB
+                                for (String title : items.keySet()) {
 
-                            //4. Traverse each item to save to DB
-                            for (String title : items.keySet()) {
-
-                                //order_details table
-                                //orderID (from order table)
-                                String productID = pdDAO.getProductIDFromName(title);
-                                int quantity = items.get(title);
-
-                                boolean addOrder_Details_result = od_dDAO.addOrderDetails(orderID, productID, quantity);
-
-                                if (addOrder_Details_result && addOrder_result) {
-                                    //5. Container destroy attribute
-                                    session.removeAttribute("CART");
-                                    url = INVOICE_PAGE;
-                                }//end if add order & order details successfully
-                            }//end traverse items
+                                    //order_details table:
+                                    //orderID (from order table)
+                                    String productID = pdDAO.getProductIDFromName(title);
+                                    int quantity = items.get(title);
+                                    //
+                                    //
+                                    boolean addOrder_Details_result = od_dDAO.addOrderDetails(orderID, productID, quantity);
+                                    if (addOrder_Details_result) {
+                                        //5. Container destroy attribute
+                                        session.removeAttribute("CART");
+                                        url = INVOICE_PAGE;
+                                    }//end if add order & order details successfully
+                                }//end traverse items
+                            } //end if add order (without details) successfully
                         } //end if items existed
                     } //end if cart existed
                 } //end if session existed
             }//end if order information error existed
         } catch (SQLException ex) {
-            log("CheckoutServlet: SQLException " + ex.getMessage());
+            String errMsg = ex.getMessage();
+            log("CheckoutServlet _ SQLException " + ex.getCause());
+            if (errMsg.contains("Order_Details")) {
+                try {
+                    od_dDAO.deleteOrderDetails(orderID);
+                } catch (SQLException ex1) {
+                    log("CheckoutServlet _ SQLException " + ex1.getCause());
+                } catch (NamingException ex1) {
+                    log("CheckoutServlet _ NamingException " + ex1.getCause());
+                }
+            }
+            if (errMsg.contains("Order")) {
+                try {
+                    odDAO.deleteOrder(orderID);
+                } catch (SQLException ex1) {
+                    log("CheckoutServlet _ SQLException " + ex1.getCause());
+                } catch (NamingException ex1) {
+                    log("CheckoutServlet _ NamingException " + ex1.getCause());
+                }
+            }
         } catch (NamingException ex) {
-            log("CheckoutServlet: NamingException " + ex.getMessage());
+            log("CheckoutServlet _ NamingException " + ex.getCause());
         } finally {
             //6. Cust view invoice and return to go shopping
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
+//            RequestDispatcher rd = request.getRequestDispatcher(url);
+//            rd.forward(request, response);
             out.close();
         }
     }

@@ -23,8 +23,7 @@ import nguyenng.cart.CartObj;
 @WebServlet(name = "RemoveBookFromCartServlet", urlPatterns = {"/RemoveBookFromCartServlet"})
 public class RemoveBookFromCartServlet extends HttpServlet {
     
-    private final String SHOPPING_PAGE = "bookstore.html";
-
+    private final String VIEW_CART_PAGE = "viewCart";
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -62,9 +61,8 @@ public class RemoveBookFromCartServlet extends HttpServlet {
                 }//end if cart existed
             }//end if session existed
             //6. Call View Cart function
-            String urlRewriting = "DispatchServlet"
-                    + "?btAction=View Cart";
-            response.sendRedirect(urlRewriting);
+            String url = VIEW_CART_PAGE;
+            response.sendRedirect(url);
         } finally {
             out.close();
         }

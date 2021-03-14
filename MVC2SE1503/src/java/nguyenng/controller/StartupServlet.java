@@ -25,8 +25,8 @@ import nguyenng.registration.RegistrationDAO;
 @WebServlet(name = "StartupServlet", urlPatterns = {"/StartupServlet"})
 public class StartupServlet extends HttpServlet {
 
-    private final String LOGIN_PAGE = "login.html";
-    private final String SEARCH_PAGE = "search.jsp";
+    private final String LOGIN_PAGE = "loginPage";
+    private final String SEARCH_PAGE = "searchPage";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -48,7 +48,6 @@ public class StartupServlet extends HttpServlet {
             //1. Check cookie existed
             Cookie[] cookies = request.getCookies();
             if (cookies != null) {
-                System.out.println("Cookies found.");
                 //2. Get username and password
                 for (Cookie cookie : cookies) {
                     String username = cookie.getName();
@@ -68,9 +67,9 @@ public class StartupServlet extends HttpServlet {
         } finally {
             //dung rd hay redirect cung dc
             //gia tri luu tru trong cookie k bi mat khi tra response
-//            response.sendRedirect(url);
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
+            response.sendRedirect(url);
+//            RequestDispatcher rd = request.getRequestDispatcher(url);
+//            rd.forward(request, response);
             out.close();
         }
     }

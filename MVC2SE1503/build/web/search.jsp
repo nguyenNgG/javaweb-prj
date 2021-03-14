@@ -3,9 +3,10 @@
     Created on : Feb 25, 2021, 9:05:21 AM
     Author     : bchao
 --%>
-
+<%--
 <%@page import="nguyenng.registration.RegistrationDTO"%>
-<%--<%@page import="java.util.List"%>--%>
+<%@page import="java.util.List"%>
+--%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
@@ -15,11 +16,14 @@
         <title>Search</title>
     </head>
     <body>
-        <h1>
-            Welcome, ${sessionScope.USER_USERNAME} -- nho day khong phai dat username, phai dat fullname
-        </h1>
+        <h2 style="color:rgb(20,50,180)">
+            Welcome, ${sessionScope.USER_FULLNAME}
+            <form action="logout">
+                <input type="submit" value="Logout" name="btAction" />
+            </form>
+        </h2>
 
-        <form action="DispatchServlet">
+        <form action="search">
             Search Value <input type="text" name="txtSearchValue" 
                                 value="${param.txtSearchValue}" /> <br/>
             <input type="submit" value="Search" name="btAction" /> <!--Lay tu DispatchServlet -->
@@ -44,8 +48,9 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <%--<c:set var="errors" value="${requestScope.UPDATE_ERROR}"/>--%>
                         <c:forEach var="dto" items="${result}" varStatus="counter">
-                        <form action="DispatchServlet"method="POST">
+                        <form action="updateAccount"method="POST">
                             <tr>
                                 <td>
                                     ${counter.count}
@@ -55,7 +60,7 @@
                                     <input type="hidden" name="txtUsername" value="${dto.username}" />
                                 </td>
                                 <td>
-                                    <input type="text" name="txtPassword" value="${dto.password}" />
+                                    <input type="text" name="txtPassword" value="${dto.password}" /> <br/>
                                 </td>
                                 <td>
                                     ${dto.fullname}
@@ -68,8 +73,8 @@
                                            />
                                 </td>
                                 <td>
-                                    <c:url var="deleteLink" value="DispatchServlet">
-                                        <c:param name="btAction" value="del"/>
+                                    <c:url var="deleteLink" value="deleteAccount">
+                                        <%--<c:param name="btAction" value="del"/>--%>
                                         <c:param name="pk" value="${dto.username}"/>
                                         <c:param name="lastSearch" value="${param.txtSearchValue}"/>
                                     </c:url>
@@ -92,6 +97,8 @@
             </h2>
         </c:if>
     </c:if>
+    <br/>
+    <a href="searchOrder.jsp">Click here to search orders.</a>
     <%--<c:set var="cookies" value="${cookie}"/>
     <c:if test="${not empty cookies}">
         <c:set var="username" value=""/>

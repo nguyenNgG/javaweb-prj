@@ -53,7 +53,7 @@ public class ProductDAO implements Serializable {
                         this.productList = new ArrayList<>();
                     } // end if productlist not existed
                     this.productList.add(dto);
-                }
+                } // end while traversing result
             } //end if con existed
         } finally {
             if (rs != null) {

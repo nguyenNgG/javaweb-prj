@@ -22,8 +22,7 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "AddBookToCartServlet", urlPatterns = {"/AddBookToCartServlet"})
 public class AddBookToCartServlet extends HttpServlet {
 
-    private final String VIEW_BOOKSTORE_CONTROLLER = "DispatchServlet"
-            + "?btAction=View+Bookstore";
+    private final String VIEW_BOOKSTORE_CONTROLLER = "viewBookstore";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -51,7 +50,7 @@ public class AddBookToCartServlet extends HttpServlet {
                 cart = new CartObj();
             }
             //3. Cust selects/grabs items
-            String title = request.getParameter("txtPName");
+            String title = request.getParameter("txtProductName");
             //4. Cust drop item into cart
             cart.addItemToCart(title);
             session.setAttribute("CART", cart); //update on server

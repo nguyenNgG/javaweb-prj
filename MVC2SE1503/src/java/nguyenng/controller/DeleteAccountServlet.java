@@ -23,8 +23,7 @@ import nguyenng.registration.RegistrationDAO;
 @WebServlet(name = "DeleteAccountServlet", urlPatterns = {"/DeleteAccountServlet"})
 public class DeleteAccountServlet extends HttpServlet {
 
-    private final String ERROR_PAGE = "error.html";
-
+    private final String SEARCH_PAGE = "searchPage";
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -41,14 +40,14 @@ public class DeleteAccountServlet extends HttpServlet {
 
         String username = request.getParameter("pk");
         String searchValue = request.getParameter("lastSearch"); //lay tu search.jsp
-        String url = ERROR_PAGE;
+        String url = SEARCH_PAGE;
 
         try {
             RegistrationDAO dao = new RegistrationDAO();
             boolean result = dao.deleteAccount(username);
             if (result) {
                 //call Search function again using urlRewriting
-                url = "DispatchServlet"
+                url = "search"
                         + "?btAction=Search"
                         + "&txtSearchValue=" + searchValue; //lastSearch value mapped o tren
                 
@@ -58,7 +57,7 @@ public class DeleteAccountServlet extends HttpServlet {
         } catch (NamingException ex) {
             log("DeleteAccountServlet: NamingException " + ex.getMessage());
         } finally {
-            response.sendRedirect(url);
+//            response.sendRedirect(url);
             //k dung requestdispatcher de tranh bi trung parameter btAction
             //trung parameter se tao mang k co thu tu, chi lay dc thang dau tien
             out.close();

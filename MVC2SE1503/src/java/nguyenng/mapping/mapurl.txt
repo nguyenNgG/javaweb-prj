@@ -1,0 +1,30 @@
+## Tomcat/bin
+default = StartupServlet
+
+createAccountPage = createNewAccount.html
+createAccountError = createNewAccount.jsp
+loginPage = login.html
+bookstore = bookstore.jsp
+
+invalid = invalid.html
+
+searchPage = search.jsp
+viewCart = viewCart.jsp
+invoicePage = orderInvoice.jsp
+
+startup = StartupServlet
+
+createAccount = CreateAccountServlet
+login = LoginServlet
+logout = LogoutServlet
+
+search = SearchLastnameServlet
+deleteAccount = DeleteAccountServlet
+updateAccount = UpdateAccountServlet
+
+searchOrder = SearchOrderServlet
+
+viewBookstore = ViewBookstoreServlet
+addBook = AddBookToCartServlet
+removeBook = RemoveBookFromCartServlet
+checkoutCart = CheckoutServlet

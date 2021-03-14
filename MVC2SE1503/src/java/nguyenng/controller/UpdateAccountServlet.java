@@ -23,8 +23,7 @@ import nguyenng.registration.RegistrationDAO;
 @WebServlet(name = "UpdateAccountServlet", urlPatterns = {"/UpdateAccountServlet"})
 public class UpdateAccountServlet extends HttpServlet {
 
-    private final String ERROR_PAGE = "error.html";
-
+    private final String SEARCH_PAGE = "searchPage";
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -38,7 +37,7 @@ public class UpdateAccountServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String url = ERROR_PAGE;
+        String url = SEARCH_PAGE;
 
         String username = request.getParameter("txtUsername");
         String password = request.getParameter("txtPassword");
@@ -54,16 +53,16 @@ public class UpdateAccountServlet extends HttpServlet {
             RegistrationDAO dao = new RegistrationDAO();
             boolean result = dao.updateAccount(username, password, role);
             if (result) {
-                url = "DispatchServlet"
-                        + "?btAction=Search"
+                url = "searchPage"
+//                        + "?btAction=Search"
                         + "&txtSearchValue=" + searchValue;
             }
         } catch (SQLException ex) {
-            log("UpdateAccountServlet: SQLException " + ex.getMessage());
+            log("UpdateAccountServlet _ SQLException " + ex.getCause());
         } catch (NamingException ex) {
-            log("UpdateAccountServlet: NamingException " + ex.getMessage());
+            log("UpdateAccountServlet _ NamingException " + ex.getCause());
         } finally {
-            response.sendRedirect(url);
+//            response.sendRedirect(url);
             out.close();
         }
     }

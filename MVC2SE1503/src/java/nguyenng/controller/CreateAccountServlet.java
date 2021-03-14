@@ -27,8 +27,8 @@ import nguyenng.registration.RegistrationDAO;
 @WebServlet(name = "CreateAccountServlet", urlPatterns = {"/CreateAccountServlet"})
 public class CreateAccountServlet extends HttpServlet {
 
-    private final String ERROR_PAGE = "createNewAccount.jsp";
-    private final String LOGIN_PAGE = "login.html";
+    private final String ERROR_PAGE = "createAccountError";
+    private final String LOGIN_PAGE = "loginPage";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -91,8 +91,8 @@ public class CreateAccountServlet extends HttpServlet {
             log("CreateAccountServlet _ NamingException: " + ex.getCause());
             //getCause dua stack trace
         } finally {
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
+//            RequestDispatcher rd = request.getRequestDispatcher(url);
+//            rd.forward(request, response);
             out.close();
         }
     }

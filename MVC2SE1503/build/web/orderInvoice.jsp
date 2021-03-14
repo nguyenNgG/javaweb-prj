@@ -4,8 +4,8 @@
     Author     : bchao
 --%>
 
-<%@page import="nguyenng.cart.CartObj"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,12 +14,8 @@
     </head>
     <body>
         <h1>Thank you for your order, please check your invoice: </h1>
-        <%
-            String url = "DispatchServlet"
-                    + "?btAction=View+Bookstore";
-        %>
         [TO-DO INVOICE]
-        <a href=<%= url%>>Click here to return to shopping.</a>
-        
+        <br/>
+        <a href="viewBookstore">Click here to return to shopping.</a>
     </body>
 </html>

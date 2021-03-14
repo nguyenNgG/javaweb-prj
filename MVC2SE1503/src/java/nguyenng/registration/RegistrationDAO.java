@@ -217,7 +217,7 @@ public class RegistrationDAO implements Serializable {
 //        }
 //        return false;
 //    }
-    public boolean createNewAccount(String username, String password, String fullName, boolean role) 
+    public boolean createNewAccount(String username, String password, String fullName, boolean role)
             throws SQLException, NamingException {
         Connection con = null;
         PreparedStatement stm = null;
@@ -252,5 +252,44 @@ public class RegistrationDAO implements Serializable {
             }
         }
         return false;
+    }
+
+    public String getFullName(String username) throws SQLException, NamingException {
+        Connection con = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        String fullname = null;
+        
+        try {
+            //1. Connect DB
+            con = DBHelpers.makeConnection();
+            if (con != null) {
+                //2. Create SQL String using DML
+                String sql = "SELECT lastName "
+                        + "FROM Registration "
+                        + "WHERE Username LIKE ?";
+                //3. Create Statement
+                stm = con.prepareStatement(sql);
+                stm.setString(1, username);
+                //4. Execute Query
+                rs = stm.executeQuery();
+                //5. Process ResultSet
+                if (rs.next()) {
+                    fullname = rs.getString("lastName");
+                    return fullname;
+                } // end if result existed
+            } // end if connection existed
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return fullname;
     }
 }
