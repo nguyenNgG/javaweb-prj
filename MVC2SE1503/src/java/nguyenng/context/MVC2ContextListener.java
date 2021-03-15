@@ -33,7 +33,6 @@ public class MVC2ContextListener implements ServletContextListener {
         Map<String, String> list = null;
         //from web.xml, inside <context-param> tag
         String filename = ctx.getInitParameter("UrlMappingFile").trim();
-        File f = null;
         FileReader fr = null; //read file from drive
         BufferedReader bf = null; //read character stream from buffer memory
         try {

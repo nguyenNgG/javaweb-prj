@@ -76,7 +76,7 @@ public class LoginServlet extends HttpServlet {
         } catch (NamingException ex) {
             log("LoginServlet _ NamingException: " + ex.getCause());
         } finally {
-//            response.sendRedirect(url); //no security
+            response.sendRedirect(url); //no security
 //            RequestDispatcher rd = request.getRequestDispatcher(url);
 //            rd.forward(request, response);
             out.close();

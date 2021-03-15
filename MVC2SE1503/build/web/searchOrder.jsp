@@ -19,7 +19,7 @@
                 <input type="submit" value="Logout" name="btAction" />
             </form>
         </h2>
-        <form action="search">
+        <form action="searchOrder">
             Search Value <input type="text" name="txtSearchOrderValue" 
                                 value="${param.txtSearchOrderValue}" /> <br/>
             <input type="submit" value="Search Order" name="btAction" /> <!--Lay tu DispatchServlet -->

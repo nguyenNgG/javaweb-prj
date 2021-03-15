@@ -1,26 +1,30 @@
 ## Tomcat/bin
-CREATE_ACCOUNT_PAGE = createNewAccount.html
-CREATE_ACCOUNT_ERROR_PAGE = createNewAccount.jsp
-LOGIN_PAGE = login.html
+default = StartupServlet
 
-INVALID_PAGE = invalid.html
+createAccountPage = createNewAccount.html
+createAccountError = createNewAccount.jsp
+loginPage = login.html
+bookstore = bookstore.jsp
 
-SEARCH_PAGE = search.jsp
-VIEW_CART_PAGE = viewCart.jsp
+invalid = invalid.html
 
-STARTUP_CONTROLLER = StartupServlet
+searchPage = search.jsp
+viewCart = viewCart.jsp
+invoicePage = orderInvoice.jsp
 
-CREATE_NEW_ACCOUNT_CONTROLLER = CreateAccountServlet
-LOGIN_CONTROLLER = LoginServlet
-LOGOUT_CONTROLLER = LogoutServlet
+startup = StartupServlet
 
-SEARCH_CONTROLLER = SearchLastnameServlet
-DELETE_ACCOUNT_CONTROLLER = DeleteAccountServlet
-UPDATE_ACCOUNT_CONTROLLER = UpdateAccountServlet
+createAccount = CreateAccountServlet
+login = LoginServlet
+logout = LogoutServlet
 
-SEARCH_ORDER_CONTROLLER = SearchOrderServlet
+search = SearchLastnameServlet
+deleteAccount = DeleteAccountServlet
+updateAccount = UpdateAccountServlet
 
-VIEW_BOOKSTORE_CONTROLLER = ViewBookstoreServlet
-ADD_BOOK_TO_CART_CONTROLLER = AddBookToCartServlet
-REMOVE_BOOK_FROM_CART_CONTROLLER = RemoveBookFromCartServlet
-CHECKOUT_CONTROLLER = CheckoutServlet
+searchOrder = SearchOrderServlet
+
+viewBookstore = ViewBookstoreServlet
+addBook = AddBookToCartServlet
+removeBook = RemoveBookFromCartServlet
+checkoutCart = CheckoutServlet

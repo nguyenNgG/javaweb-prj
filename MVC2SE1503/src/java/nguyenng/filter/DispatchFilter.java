@@ -135,9 +135,12 @@ public class DispatchFilter implements Filter {
 
             }
             if (url != null) {
+                System.out.println("TEST 1");
                 RequestDispatcher rd = request.getRequestDispatcher(url);
+                System.out.println(url);
                 rd.forward(request, response);
             } else {
+                System.out.println("TEST 4");
                 chain.doFilter(request, response);
             }
         } catch (Throwable t) {
@@ -148,8 +151,11 @@ public class DispatchFilter implements Filter {
             t.printStackTrace();
         }
         
+        System.out.println("TEST 2");
+        
         doAfterProcessing(request, response);
-
+        
+        System.out.println("TEST 3");
         // If there was a problem, we want to rethrow it if it is
         // a known type, otherwise log it.
         if (problem != null) {

@@ -91,6 +91,7 @@ public class CreateAccountServlet extends HttpServlet {
             log("CreateAccountServlet _ NamingException: " + ex.getCause());
             //getCause dua stack trace
         } finally {
+            response.sendRedirect(url);
 //            RequestDispatcher rd = request.getRequestDispatcher(url);
 //            rd.forward(request, response);
             out.close();

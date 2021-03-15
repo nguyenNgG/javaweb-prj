@@ -62,7 +62,7 @@ public class UpdateAccountServlet extends HttpServlet {
         } catch (NamingException ex) {
             log("UpdateAccountServlet _ NamingException " + ex.getCause());
         } finally {
-//            response.sendRedirect(url);
+            response.sendRedirect(url);
             out.close();
         }
     }

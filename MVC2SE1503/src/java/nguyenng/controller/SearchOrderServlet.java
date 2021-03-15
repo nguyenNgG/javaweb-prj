@@ -30,7 +30,8 @@ import nguyenng.order_details.Order_DetailsDTO;
 @WebServlet(name = "SearchOrderServlet", urlPatterns = {"/SearchOrderServlet"})
 public class SearchOrderServlet extends HttpServlet {
     
-    private final String SEARCH_RESULT_PAGE = "searchOrder";
+    private final String SEARCH_RESULT_PAGE = "searchOrderPage";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -66,8 +67,9 @@ public class SearchOrderServlet extends HttpServlet {
         } catch (NamingException ex) {
             log("SearchOrderServlet _ NamingException: " + ex.getCause());
         } finally {
-            RequestDispatcher rd = request.getRequestDispatcher(url);
-            rd.forward(request, response);
+//            RequestDispatcher rd = request.getRequestDispatcher(url);
+//            rd.forward(request, response);
+            response.sendRedirect(url);
             out.close();
         }
     }

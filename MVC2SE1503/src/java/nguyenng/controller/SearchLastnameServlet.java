@@ -60,6 +60,7 @@ public class SearchLastnameServlet extends HttpServlet {
         } catch (NamingException ex) {
             log("SearchLastnameServlet _ NamingException: " + ex.getCause());
         } finally {
+            response.sendRedirect(url);
 //            RequestDispatcher rd = request.getRequestDispatcher(url);
 //            rd.forward(request, response);
             out.close();

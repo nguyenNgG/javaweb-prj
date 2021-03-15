@@ -166,6 +166,7 @@ public class CheckoutServlet extends HttpServlet {
             log("CheckoutServlet _ NamingException " + ex.getCause());
         } finally {
             //6. Cust view invoice and return to go shopping
+            response.sendRedirect(url);
 //            RequestDispatcher rd = request.getRequestDispatcher(url);
 //            rd.forward(request, response);
             out.close();

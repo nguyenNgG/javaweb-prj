@@ -98,7 +98,7 @@
         </c:if>
     </c:if>
     <br/>
-    <a href="searchOrder.jsp">Click here to search orders.</a>
+    <a href="searchOrderPage">Click here to search orders.</a>
     <%--<c:set var="cookies" value="${cookie}"/>
     <c:if test="${not empty cookies}">
         <c:set var="username" value=""/>

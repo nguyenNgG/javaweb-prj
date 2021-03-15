@@ -57,7 +57,7 @@ public class DeleteAccountServlet extends HttpServlet {
         } catch (NamingException ex) {
             log("DeleteAccountServlet: NamingException " + ex.getMessage());
         } finally {
-//            response.sendRedirect(url);
+            response.sendRedirect(url);
             //k dung requestdispatcher de tranh bi trung parameter btAction
             //trung parameter se tao mang k co thu tu, chi lay dc thang dau tien
             out.close();

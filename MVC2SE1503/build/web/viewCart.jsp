@@ -101,7 +101,7 @@
     </c:if>
     <c:if test="${empty items}">
         <h2>No item exist in cart.</h2>
-        <a href="${shopping}">Add more items to Cart.</a>
+        <a href="viewBookstore">Add more items to Cart.</a>
     </c:if>
     <br/>
     <a href="default">Click here to exit shopping.</a>
