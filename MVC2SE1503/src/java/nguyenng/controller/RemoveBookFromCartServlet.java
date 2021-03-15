@@ -8,6 +8,7 @@ package nguyenng.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,8 +23,9 @@ import nguyenng.cart.CartObj;
  */
 @WebServlet(name = "RemoveBookFromCartServlet", urlPatterns = {"/RemoveBookFromCartServlet"})
 public class RemoveBookFromCartServlet extends HttpServlet {
-    
+
     private final String VIEW_CART_PAGE = "viewCart";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -37,6 +39,13 @@ public class RemoveBookFromCartServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
+
+        Map<String, String> listUrl = (Map<String, String>) request
+                .getServletContext()
+                .getAttribute("URL_MAPPING");
+
+        String url = listUrl.get(VIEW_CART_PAGE);
+
         try {
             //1. Cust goes to cart place
             // Cart ma user thay la o client
@@ -50,7 +59,8 @@ public class RemoveBookFromCartServlet extends HttpServlet {
                     Map<String, Integer> items = cart.getItems();
                     if (items != null) {
                         //4. Cust lay danh sach cac mon do can xoa
-                        String[] selectedItems = request.getParameterValues("chkItem");
+                        String[] selectedItems = request.
+                                getParameterValues("chkItem");
                         if (selectedItems != null) {
                             for (String title : selectedItems) {
                                 cart.removeItemFromCart(title);
@@ -61,8 +71,8 @@ public class RemoveBookFromCartServlet extends HttpServlet {
                 }//end if cart existed
             }//end if session existed
             //6. Call View Cart function
-            String url = VIEW_CART_PAGE;
-            response.sendRedirect(url);
+            RequestDispatcher rd = request.getRequestDispatcher(url);
+            rd.forward(request, response);
         } finally {
             out.close();
         }

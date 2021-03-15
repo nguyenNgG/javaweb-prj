@@ -8,6 +8,7 @@ package nguyenng.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Map;
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -44,8 +45,11 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         //Khong dung shorthand
         PrintWriter out = response.getWriter();
-
-        String url = INVALID_PAGE; //default page
+        Map<String, String> listUrl = (Map<String, String>) request
+                .getServletContext()
+                .getAttribute("URL_MAPPING");
+        
+        String url = listUrl.get(INVALID_PAGE); //default page
 
         String username = request.getParameter("txtUsername");
         String password = request.getParameter("txtPassword");
@@ -55,30 +59,33 @@ public class LoginServlet extends HttpServlet {
             RegistrationDAO dao = new RegistrationDAO();
             boolean result = dao.checkLogin(username, password);
             if (result) {
-                url = SEARCH_PAGE; //when result is true, set url to SEARCH
+                url = listUrl.get(SEARCH_PAGE); 
                 HttpSession session = request.getSession(true);
                 //can luu tru thi can vung nho cap nhat
                 session.setAttribute("USER_USERNAME", username);
-                //truyen fullname vao, su dung dao
+                //su dung dao de lay fullname 
                 String fullname = dao.getFullName(username);
                 if (fullname == null) {
                     fullname = username + " (username)";
                 }
                 session.setAttribute("USER_FULLNAME", fullname);
-//                Cookie cookie = new Cookie(username, password);
-//                cookie.setMaxAge(60);
-//                response.addCookie(cookie);
+                Cookie cookie = new Cookie(username, password);
+                cookie.setMaxAge(60*3);
+                response.addCookie(cookie);
 //                cookie de remember password, session de quan ly 
 //                quy trinh van hanh network (thao tac)
             } //end if Login is click
+            RequestDispatcher rd = request.getRequestDispatcher(url);
+            rd.forward(request, response);
         } catch (SQLException ex) {
             log("LoginServlet _ SQLException: " + ex.getCause());
+            response.sendError(461);
         } catch (NamingException ex) {
             log("LoginServlet _ NamingException: " + ex.getCause());
+            response.sendError(461);
         } finally {
-            response.sendRedirect(url); //no security
-//            RequestDispatcher rd = request.getRequestDispatcher(url);
-//            rd.forward(request, response);
+//            response.sendRedirect(url); 
+            
             out.close();
         }
     }

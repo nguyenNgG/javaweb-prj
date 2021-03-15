@@ -49,7 +49,12 @@ public class CheckoutServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String url = VIEW_CART_PAGE;
+
+        Map<String, String> listUrl = (Map<String, String>) request
+                .getServletContext()
+                .getAttribute("URL_MAPPING");
+
+        String url = listUrl.get(VIEW_CART_PAGE);
         //0. Cust information
         boolean bErr = false;
         String custName = request.getParameter("txtCustName");
@@ -68,24 +73,19 @@ public class CheckoutServlet extends HttpServlet {
         //if taken, generate another one and try checking again
         //if there are no more available IDs to assign
         //log to server and break
-        String orderID = "";
-        Random rand = new Random();
-        int idCount = 0;
+        String orderID = "ORDER";
+        int count = 0;
         try {
             do {
-                int randInt = rand.nextInt(3000);
-                orderID = "ORDER" + randInt;
-                ++idCount;
-                if (idCount > 3001) {
-                    log("No more available IDs.");
-                    break;
-                }
+                ++count;
+                orderID = "ORDER" + count;
             } while (odDAO.isOrderIDTaken(orderID));
             //end while if available order ID is found
         } catch (SQLException ex) {
-            log("CheckoutServlet _ SQLException " + ex.getMessage() + "\n" + ex.getCause());
+            log("CheckoutServlet _ SQLException: "
+                    + ex.getMessage() + "\n" + ex.getCause());
         } catch (NamingException ex) {
-            log("CheckoutServlet _ NamingException " + ex.getCause());
+            log("CheckoutServlet _ NamingException: " + ex.getCause());
         }
 
         try {
@@ -94,7 +94,8 @@ public class CheckoutServlet extends HttpServlet {
                 bErr = true;
                 errors.setNameLengthErr("Name must have a length of 2-50 characters");
             }
-            if (custAddress.trim().length() < 6 || custAddress.trim().length() > 30) {
+            if (custAddress.trim().length() < 6
+                    || custAddress.trim().length() > 30) {
                 bErr = true;
                 errors.setAddressLengthErr("Address must have a length of 6-30 characters");
             }
@@ -129,11 +130,13 @@ public class CheckoutServlet extends HttpServlet {
                                     int quantity = items.get(title);
                                     //
                                     //
-                                    boolean addOrder_Details_result = od_dDAO.addOrderDetails(orderID, productID, quantity);
+                                    boolean addOrder_Details_result = od_dDAO.
+                                            addOrderDetails(orderID, productID, quantity);
                                     if (addOrder_Details_result) {
                                         //5. Container destroy attribute
                                         session.removeAttribute("CART");
-                                        url = INVOICE_PAGE;
+                                        //6. Cust view invoice and return to go shopping
+                                        url = listUrl.get(INVOICE_PAGE);
                                     }//end if add order & order details successfully
                                 }//end traverse items
                             } //end if add order (without details) successfully
@@ -141,6 +144,8 @@ public class CheckoutServlet extends HttpServlet {
                     } //end if cart existed
                 } //end if session existed
             }//end if order information error existed
+            RequestDispatcher rd = request.getRequestDispatcher(url);
+            rd.forward(request, response);
         } catch (SQLException ex) {
             String errMsg = ex.getMessage();
             log("CheckoutServlet _ SQLException " + ex.getCause());
@@ -149,8 +154,10 @@ public class CheckoutServlet extends HttpServlet {
                     od_dDAO.deleteOrderDetails(orderID);
                 } catch (SQLException ex1) {
                     log("CheckoutServlet _ SQLException " + ex1.getCause());
+                    response.sendError(461);
                 } catch (NamingException ex1) {
                     log("CheckoutServlet _ NamingException " + ex1.getCause());
+                    response.sendError(461);
                 }
             }
             if (errMsg.contains("Order")) {
@@ -158,17 +165,20 @@ public class CheckoutServlet extends HttpServlet {
                     odDAO.deleteOrder(orderID);
                 } catch (SQLException ex1) {
                     log("CheckoutServlet _ SQLException " + ex1.getCause());
+                    response.sendError(461);
                 } catch (NamingException ex1) {
                     log("CheckoutServlet _ NamingException " + ex1.getCause());
+                    response.sendError(461);
                 }
             }
+            response.sendError(461);
         } catch (NamingException ex) {
             log("CheckoutServlet _ NamingException " + ex.getCause());
+            response.sendError(461);
         } finally {
-            //6. Cust view invoice and return to go shopping
-            response.sendRedirect(url);
-//            RequestDispatcher rd = request.getRequestDispatcher(url);
-//            rd.forward(request, response);
+
+//            response.sendRedirect(url);
+            
             out.close();
         }
     }

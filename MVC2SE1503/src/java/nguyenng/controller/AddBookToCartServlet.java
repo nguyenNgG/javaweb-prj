@@ -8,6 +8,7 @@ package nguyenng.controller;
 import nguyenng.cart.CartObj;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -37,7 +38,12 @@ public class AddBookToCartServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String url = VIEW_BOOKSTORE_CONTROLLER;
+
+        Map<String, String> listUrl = (Map<String, String>) request
+                .getServletContext()
+                .getAttribute("URL_MAPPING");
+
+        String url = listUrl.get(VIEW_BOOKSTORE_CONTROLLER);
         try {
             //1. Cust goes to cart place
             // cart must be available so true

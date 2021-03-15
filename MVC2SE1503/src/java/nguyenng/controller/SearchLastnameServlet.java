@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -42,7 +43,11 @@ public class SearchLastnameServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String url = SEARCH_PAGE;
+
+        Map<String, String> listUrl = (Map<String, String>) request
+                .getServletContext()
+                .getAttribute("URL_MAPPING");
+        String url = listUrl.get(SEARCH_PAGE);
 
         String searchValue = request.getParameter("txtSearchValue");
         try {
@@ -53,16 +58,19 @@ public class SearchLastnameServlet extends HttpServlet {
                 List<RegistrationDTO> result = dao.getAccountList();
                 request.setAttribute("SEARCH_RESULT", result);
                 //send result through Scope
-                url = SEARCH_PAGE;
+                url = listUrl.get(SEARCH_PAGE);
             } //end if search Value has value
+            RequestDispatcher rd = request.getRequestDispatcher(url);
+            rd.forward(request, response);
         } catch (SQLException ex) {
             log("SearchLastnameServlet _ SQLException: " + ex.getCause());
+            response.sendError(461);
         } catch (NamingException ex) {
             log("SearchLastnameServlet _ NamingException: " + ex.getCause());
+            response.sendError(461);
         } finally {
-            response.sendRedirect(url);
-//            RequestDispatcher rd = request.getRequestDispatcher(url);
-//            rd.forward(request, response);
+//            response.sendRedirect(url);
+            
             out.close();
         }
     }

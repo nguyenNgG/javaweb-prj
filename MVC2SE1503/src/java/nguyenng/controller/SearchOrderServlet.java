@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
@@ -30,7 +31,7 @@ import nguyenng.order_details.Order_DetailsDTO;
 @WebServlet(name = "SearchOrderServlet", urlPatterns = {"/SearchOrderServlet"})
 public class SearchOrderServlet extends HttpServlet {
     
-    private final String SEARCH_RESULT_PAGE = "searchOrderPage";
+    private final String SEARCH_ORDER_RESULT_PAGE = "searchOrderPage";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,7 +47,11 @@ public class SearchOrderServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         
-        String url = SEARCH_RESULT_PAGE;
+        Map<String, String> listUrl = (Map<String, String>) request
+                .getServletContext()
+                .getAttribute("URL_MAPPING");
+        
+        String url = listUrl.get(SEARCH_ORDER_RESULT_PAGE);
         
         try {
             OrderDAO odDAO = new OrderDAO();
@@ -61,15 +66,19 @@ public class SearchOrderServlet extends HttpServlet {
             request.setAttribute("SEARCH_ORDER", orderList);
             request.setAttribute("SEARCH_ORDER_DETAILS", order_Details_List);
             
-            url = SEARCH_RESULT_PAGE;
+            url = listUrl.get(SEARCH_ORDER_RESULT_PAGE);
+            
+            RequestDispatcher rd = request.getRequestDispatcher(url);
+            rd.forward(request, response);
         } catch (SQLException ex) {
             log("SearchOrderServlet _ SQLException: " + ex.getCause());
+            response.sendError(461);
         } catch (NamingException ex) {
             log("SearchOrderServlet _ NamingException: " + ex.getCause());
+            response.sendError(461);
         } finally {
-//            RequestDispatcher rd = request.getRequestDispatcher(url);
-//            rd.forward(request, response);
-            response.sendRedirect(url);
+            
+//            response.sendRedirect(url);
             out.close();
         }
     }

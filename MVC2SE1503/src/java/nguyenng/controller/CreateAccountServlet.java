@@ -8,6 +8,7 @@ package nguyenng.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
@@ -49,7 +50,11 @@ public class CreateAccountServlet extends HttpServlet {
         String confirm = request.getParameter("txtConfirm");
         String fullname = request.getParameter("txtFullname");
 
-        String url = ERROR_PAGE;
+        Map<String, String> listUrl = (Map<String, String>) request
+                .getServletContext()
+                .getAttribute("URL_MAPPING");
+
+        String url = listUrl.get(ERROR_PAGE);
         RegistrationCreateError errors = new RegistrationCreateError();
         boolean foundErr = false;
 
@@ -68,18 +73,20 @@ public class CreateAccountServlet extends HttpServlet {
             }
             if (fullname.trim().length() < 2 || fullname.trim().length() > 50) {
                 foundErr = true;
-                errors.setFullnameLengthErr("Full name requires input from 6 to 30 characters.");
+                errors.setFullnameLengthErr("Full name requires input from 2 to 30 characters.");
             }
-            
+
             if (foundErr) {
                 request.setAttribute("CREATE_ERROR", errors);
             } else {
                 RegistrationDAO dao = new RegistrationDAO();
                 boolean result = dao.createNewAccount(username, password, fullname, false);
                 if (result) {
-                    url = LOGIN_PAGE;
+                    url = listUrl.get(LOGIN_PAGE);
                 } //if create successfully
             }
+            RequestDispatcher rd = request.getRequestDispatcher(url);
+            rd.forward(request, response);
         } catch (SQLException ex) {
             String errMsg = ex.getMessage();
             log("CreateAccountServlet _ SQLException: " + ex.getCause());
@@ -87,13 +94,14 @@ public class CreateAccountServlet extends HttpServlet {
                 errors.setUsernameIsExistedErr(username + " existed.");
                 request.setAttribute("CREATE_ERROR", errors);
             }
+            RequestDispatcher rd = request.getRequestDispatcher(url);
+            rd.forward(request, response);
         } catch (NamingException ex) {
             log("CreateAccountServlet _ NamingException: " + ex.getCause());
-            //getCause dua stack trace
+            response.sendError(461);
         } finally {
-            response.sendRedirect(url);
-//            RequestDispatcher rd = request.getRequestDispatcher(url);
-//            rd.forward(request, response);
+//            response.sendRedirect(url);
+            
             out.close();
         }
     }

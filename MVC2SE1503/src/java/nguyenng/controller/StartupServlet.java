@@ -8,6 +8,7 @@ package nguyenng.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Map;
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -16,6 +17,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import nguyenng.registration.RegistrationDAO;
 
 /**
@@ -42,7 +44,10 @@ public class StartupServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
 
-        String url = LOGIN_PAGE;
+        Map<String, String> listUrl = (Map<String, String>) request
+                .getServletContext()
+                .getAttribute("URL_MAPPING");
+        String url = listUrl.get(LOGIN_PAGE);
 
         try {
             //1. Check cookie existed
@@ -56,20 +61,32 @@ public class StartupServlet extends HttpServlet {
                     RegistrationDAO dao = new RegistrationDAO();
                     boolean result = dao.checkLogin(username, password);
                     if (result) {
-                        url = SEARCH_PAGE;
+                        url = listUrl.get(SEARCH_PAGE);
+                        HttpSession session = request.getSession(true);
+                        //can luu tru thi can vung nho cap nhat
+                        session.setAttribute("USER_USERNAME", username);
+                        //su dung dao de lay fullname
+                        String fullname = dao.getFullName(username);
+                        if (fullname == null) {
+                            fullname = username + " (username)";
+                        }
+                        session.setAttribute("USER_FULLNAME", fullname);
                     }//end if user valid
-                }
+                } //traversing cookies
             }//end if cookies existed
+            RequestDispatcher rd = request.getRequestDispatcher(url);
+            rd.forward(request, response);
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            log("StartupServlet _ SQLException: " + ex.getCause());
+            response.sendError(461);
         } catch (NamingException ex) {
-            ex.printStackTrace();
+            log("StartupServlet _ SQLException: " + ex.getCause());
+            response.sendError(461);
         } finally {
             //dung rd hay redirect cung dc
             //gia tri luu tru trong cookie k bi mat khi tra response
-            response.sendRedirect(url);
-//            RequestDispatcher rd = request.getRequestDispatcher(url);
-//            rd.forward(request, response);
+//            response.sendRedirect(url);
+            // dùng rd để ẩn login.html
             out.close();
         }
     }

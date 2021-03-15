@@ -8,13 +8,16 @@ package nguyenng.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Map;
 import javax.naming.NamingException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import nguyenng.registration.RegistrationDAO;
+import nguyenng.registration.RegistrationUpdateError;
 
 /**
  *
@@ -24,6 +27,8 @@ import nguyenng.registration.RegistrationDAO;
 public class UpdateAccountServlet extends HttpServlet {
 
     private final String SEARCH_PAGE = "searchPage";
+    private final String SEARCH_CONTROLLER = "search";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -37,7 +42,12 @@ public class UpdateAccountServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String url = SEARCH_PAGE;
+
+        Map<String, String> listUrl = (Map<String, String>) request
+                .getServletContext()
+                .getAttribute("URL_MAPPING");
+
+        String url = listUrl.get(SEARCH_PAGE);
 
         String username = request.getParameter("txtUsername");
         String password = request.getParameter("txtPassword");
@@ -45,24 +55,43 @@ public class UpdateAccountServlet extends HttpServlet {
         String searchValue = request.getParameter("lastSearchValue");
         boolean role = false;
 
+        RegistrationUpdateError errors = new RegistrationUpdateError();
+        boolean foundErr = false;
+
         try {
             System.out.println(chkAdmin);
             if (chkAdmin != null) {
                 role = true;
             }
-            RegistrationDAO dao = new RegistrationDAO();
-            boolean result = dao.updateAccount(username, password, role);
-            if (result) {
-                url = "searchPage"
-//                        + "?btAction=Search"
-                        + "&txtSearchValue=" + searchValue;
+            if (password.trim().length() < 6 || password.trim().length() > 20) {
+                foundErr = true;
+                errors.setPasswordLengthErr("Password requires input from 6 to 20 characters.");
             }
+            if (foundErr) {
+                request.setAttribute("UPDATE_ERROR", errors);
+                request.setAttribute("UPDATE_ERROR_USERNAME", username);
+                url = listUrl.get(SEARCH_CONTROLLER)
+                        + "?txtSearchValue=" + searchValue;
+            } // end if errors found
+            else {
+                RegistrationDAO dao = new RegistrationDAO();
+                boolean result = dao.updateAccount(username, password, role);
+                if (result) {
+                    url = listUrl.get(SEARCH_CONTROLLER)
+                            //                        + "?btAction=Search"
+                            + "?txtSearchValue=" + searchValue;
+                } // end if update successfully
+            } // no errors found
+            RequestDispatcher rd = request.getRequestDispatcher(url);
+            rd.forward(request, response);
         } catch (SQLException ex) {
-            log("UpdateAccountServlet _ SQLException " + ex.getCause());
+            log("UpdateAccountServlet _ SQLException: " + ex.getCause());
+            response.sendError(461);
         } catch (NamingException ex) {
-            log("UpdateAccountServlet _ NamingException " + ex.getCause());
+            log("UpdateAccountServlet _ NamingException: " + ex.getCause());
+            response.sendError(461);
         } finally {
-            response.sendRedirect(url);
+            
             out.close();
         }
     }

@@ -18,8 +18,12 @@
     </head>
     <body>
         <h1>Welcome, please choose products.</h1>
-        <a href="default">Click here to exit shopping</a> <br/>
-        <a href="viewCart">Click here to view cart.</a> <br/><br/>
+        <a href="default">Click here to exit shopping.</a> <br/>
+        <br/>
+        <form action="viewCart">
+            <input type="submit" value="View Cart" />
+        </form>
+        <br/>
         <%--List<ProductDTO>--%>
         <c:set var="result" value="${requestScope.BOOKSTORE_VIEW}"/>
         <c:if test="${not empty result}">
@@ -33,6 +37,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <%--ProductDTO--%>
                     <c:forEach var="dto" items="${result}" varStatus="counter">
                     <form action="addBook">
                         <tr>

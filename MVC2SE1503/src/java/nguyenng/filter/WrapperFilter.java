@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
  */
 public class WrapperFilter implements Filter {
 
-//    Map<String, String> list;
+//    private Map<String, String> list;
     private static final boolean debug = false;
 
     // The filter configuration object we are associated with.  If
@@ -156,11 +156,49 @@ public class WrapperFilter implements Filter {
         doBeforeProcessing(wrappedRequest, wrappedResponse);
 
         Throwable problem = null;
-
+//        try {
+//            System.out.println("Filtering begin:");
+//            ServletContext contextScope = request.getServletContext();
+//            list = (Map<String, String>) contextScope.getAttribute("URL_MAPPING");
+//            Set<String> mappingKeys = list.keySet();
+//
+////            HttpServletRequest req = (HttpServletRequest) request;
+//            String uri = wrappedRequest.getRequestURI();
+//            String url = null;
+//
+//            String requestKey = null;
+//
+//            if (list != null) {
+//                url = list.get("default");
+//                int lastIndex = uri.lastIndexOf("/");
+//                String resource = uri.substring(lastIndex + 1);
+//                if (resource.length() > 0) {
+//                    requestKey = resource.substring(0);
+//                    System.out.println("Request key: " + requestKey);
+//                    url = list.get(requestKey);
+//                    System.out.println("Request value from key: " + url);
+//                }
+//
+//            }
+//            if (url != null) {
+//                System.out.println("URL is: " + url);
+//                RequestDispatcher rd = wrappedRequest.getRequestDispatcher(url);
+//                System.out.println("Forwarding to: " + url);
+//                rd.forward(wrappedRequest, wrappedResponse);
+//            } else {
+//                System.out.println("TEST 4");
+//                chain.doFilter(wrappedRequest, wrappedResponse);
+//            }
+//        } catch (Throwable t) {
+//            // If an exception is thrown somewhere down the filter chain,
+//            // we still want to execute our after processing, and then
+//            // rethrow the problem after that.
+//            problem = t;
+//            t.printStackTrace();
+//        }
         //
-        
+        System.out.println("Filtering finished.");
         //
-
         doAfterProcessing(wrappedRequest, wrappedResponse);
 
         // If there was a problem, we want to rethrow it if it is
@@ -247,7 +285,7 @@ public class WrapperFilter implements Filter {
         } else {
             try {
                 PrintStream ps = new PrintStream(response.getOutputStream());
-                t.printStackTrace(ps);
+//                t.printStackTrace(ps);
                 ps.close();
                 response.getOutputStream().close();
             } catch (Exception ex) {
@@ -260,7 +298,7 @@ public class WrapperFilter implements Filter {
         try {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
-            t.printStackTrace(pw);
+//            t.printStackTrace(pw);
             pw.close();
             sw.close();
             stackTrace = sw.getBuffer().toString();

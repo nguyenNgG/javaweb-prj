@@ -22,7 +22,8 @@
                 <input type="submit" value="Logout" name="btAction" />
             </form>
         </h2>
-
+        <a href="viewBookstore">Click here to view bookstore.</a> <br/>
+        <a href="searchOrderPage">Click here to view search order page.</a> <br/> <br/>
         <form action="search">
             Search Value <input type="text" name="txtSearchValue" 
                                 value="${param.txtSearchValue}" /> <br/>
@@ -48,8 +49,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <%--<c:set var="errors" value="${requestScope.UPDATE_ERROR}"/>--%>
-                        <c:forEach var="dto" items="${result}" varStatus="counter">
+                        <c:set var="errors" 
+                               value="${requestScope.UPDATE_ERROR}"/>
+                        <c:set var="errors_username" 
+                               value="${requestScope.UPDATE_ERROR_USERNAME}"/>
+                        <c:forEach var="dto" items="${result}" 
+                                   varStatus="counter">
                         <form action="updateAccount"method="POST">
                             <tr>
                                 <td>
@@ -57,16 +62,27 @@
                                     .</td>
                                 <td>
                                     ${dto.username}
-                                    <input type="hidden" name="txtUsername" value="${dto.username}" />
+                                    <input type="hidden" name="txtUsername" 
+                                           value="${dto.username}" />
                                 </td>
                                 <td>
-                                    <input type="text" name="txtPassword" value="${dto.password}" /> <br/>
+                                    <input type="text" name="txtPassword" 
+                                           value="${dto.password}" /> <br/>
+                                    <c:if test="${
+                                          (not empty errors.passwordLengthErr) 
+                                              and 
+                                              (dto.username eq errors_username)}">
+                                          <font color="red">
+                                          ${errors.passwordLengthErr}
+                                          </font><br/>
+                                    </c:if>
                                 </td>
                                 <td>
                                     ${dto.fullname}
                                 </td>
                                 <td>
-                                    <input type="checkbox" name="chkAdmin" value="ON"
+                                    <input type="checkbox" name="chkAdmin" 
+                                           value="ON"
                                            <c:if test="${dto.role}">
                                                checked
                                            </c:if>
@@ -75,14 +91,21 @@
                                 <td>
                                     <c:url var="deleteLink" value="deleteAccount">
                                         <%--<c:param name="btAction" value="del"/>--%>
-                                        <c:param name="pk" value="${dto.username}"/>
-                                        <c:param name="lastSearch" value="${param.txtSearchValue}"/>
+                                        <c:param name="pk" 
+                                                 value="${dto.username}"/>
+                                        <c:param 
+                                            name="lastSearch" 
+                                            value="${param.txtSearchValue}"/>
                                     </c:url>
                                     <a href="${deleteLink}">Delete</a>
                                 </td>
                                 <td>
-                                    <input type="submit" value="Update" name="btAction" />
-                                    <input type="hidden" name="lastSearchValue" value="${param.txtSearchValue}" />
+                                    <input type="submit" value="Update" 
+                                           name="btAction" />
+                                    <input 
+                                        type="hidden" 
+                                        name="lastSearchValue" 
+                                        value="${param.txtSearchValue}" />
                                 </td>
                             </tr>
                         </form>
@@ -98,7 +121,7 @@
         </c:if>
     </c:if>
     <br/>
-    <a href="searchOrderPage">Click here to search orders.</a>
+
     <%--<c:set var="cookies" value="${cookie}"/>
     <c:if test="${not empty cookies}">
         <c:set var="username" value=""/>

@@ -96,9 +96,9 @@
                     <input type="submit" value="Checkout" name="btAction" />
                     <input type="reset" value="Reset" /> <br/>
                 </form>
-            </c:if>
-        </c:if>
-    </c:if>
+            </c:if> <%--Items existed--%>
+        </c:if> <%--Cart existed--%>
+    </c:if> <%--Session existed--%>
     <c:if test="${empty items}">
         <h2>No item exist in cart.</h2>
         <a href="viewBookstore">Add more items to Cart.</a>

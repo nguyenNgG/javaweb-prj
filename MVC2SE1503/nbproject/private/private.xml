@@ -5,16 +5,12 @@
             <url>src/java/nguyenng/controller/LoginServlet.java</url>
             <bookmark id="1">
                 <name/>
-                <line>69</line>
+                <line>73</line>
                 <key/>
             </bookmark>
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/E:/Laptrinh/Servlet/javaweb-prj/MVC2SE1503/src/java/nguyenng/filter/DispatchFilter.java</file>
-            <file>file:/E:/Laptrinh/Servlet/javaweb-prj/MVC2SE1503/web/WEB-INF/web.xml</file>
-            <file>file:/E:/Laptrinh/Servlet/javaweb-prj/MVC2SE1503/src/java/nguyenng/context/MVC2ContextListener.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

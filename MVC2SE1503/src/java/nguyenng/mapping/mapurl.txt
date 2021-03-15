@@ -5,6 +5,7 @@ createAccountPage = createNewAccount.html
 createAccountError = createNewAccount.jsp
 loginPage = login.html
 bookstore = bookstore.jsp
+searchOrderPage = searchOrder.jsp
 
 invalid = invalid.html
 

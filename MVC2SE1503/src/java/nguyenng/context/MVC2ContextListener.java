@@ -53,9 +53,11 @@ public class MVC2ContextListener implements ServletContextListener {
             } //end reading from file
             //save in contextscope
             ctx.setAttribute("URL_MAPPING", list);
-        } catch (FileNotFoundException ex) {
+        } 
+        catch (FileNotFoundException ex) {
             System.out.println("MVC2ContextListener _ FileNotFoundException: " + ex.getCause());
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             System.out.println("MVC2ContextListener _ IOException: " + ex.getCause());
         } finally {
             try {

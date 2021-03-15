@@ -20,6 +20,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
@@ -28,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 public class DispatchFilter implements Filter {
 
     private static final boolean debug = true;
-    Map<String, String> list;
+    private Map<String, String> listUrl;
 
     // The filter configuration object we are associated with.  If
     // this value is null, this filter instance is not currently
@@ -37,6 +38,17 @@ public class DispatchFilter implements Filter {
 
     public DispatchFilter() {
     }
+
+//    public Map<String, String> getListUrl() {
+//        return this.listUrl;
+//    }
+//
+//    public String get(String resourceKey) {
+//        if (this.listUrl != null) {
+//            return listUrl.get(resourceKey);
+//        }
+//        return null;
+//    }
 
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
@@ -104,43 +116,39 @@ public class DispatchFilter implements Filter {
             FilterChain chain)
             throws IOException, ServletException {
 
-        if (debug) {
-            log("DispatchFilter:doFilter()");
-        }
-
-        doBeforeProcessing(request, response);
-
         Throwable problem = null;
         try {
             ServletContext contextScope = request.getServletContext();
-            list = (Map<String, String>) contextScope.getAttribute("URL_MAPPING");
-            Set<String> mappingKeys = list.keySet();
+            listUrl = (Map<String, String>) contextScope.getAttribute("URL_MAPPING");
 
             HttpServletRequest req = (HttpServletRequest) request;
             String uri = req.getRequestURI();
             String url = null;
 
-            String requestKey = null;
+            String resourceKey = null;
 
-            if (list != null) {
-                url = list.get("default");
+            if (this.listUrl != null) {
+                url = this.listUrl.get("default");
                 int lastIndex = uri.lastIndexOf("/");
                 String resource = uri.substring(lastIndex + 1);
                 if (resource.length() > 0) {
-                    requestKey = resource.substring(0);
-                    System.out.println("## " + requestKey);
-                    url = list.get(requestKey);
-                    System.out.println("#### " + url);
+                    resourceKey = resource.substring(0);
+                    System.out.println("Received resource key: " + resourceKey);
+                    url = this.listUrl.get(resourceKey);
+                    System.out.println("Using value: " + url);
                 }
 
             }
+            if (this.listUrl == null) {
+                HttpServletResponse httpResp = (HttpServletResponse) response;
+                httpResp.sendError(404);
+            }
+            
             if (url != null) {
-                System.out.println("TEST 1");
                 RequestDispatcher rd = request.getRequestDispatcher(url);
                 System.out.println(url);
                 rd.forward(request, response);
             } else {
-                System.out.println("TEST 4");
                 chain.doFilter(request, response);
             }
         } catch (Throwable t) {
@@ -148,25 +156,9 @@ public class DispatchFilter implements Filter {
             // we still want to execute our after processing, and then
             // rethrow the problem after that.
             problem = t;
-            t.printStackTrace();
+//            t.printStackTrace();
         }
-        
-        System.out.println("TEST 2");
-        
-        doAfterProcessing(request, response);
-        
-        System.out.println("TEST 3");
-        // If there was a problem, we want to rethrow it if it is
-        // a known type, otherwise log it.
-        if (problem != null) {
-            if (problem instanceof ServletException) {
-                throw (ServletException) problem;
-            }
-            if (problem instanceof IOException) {
-                throw (IOException) problem;
-            }
-            sendProcessingError(problem, response);
-        }
+
     }
 
     /**
@@ -239,7 +231,7 @@ public class DispatchFilter implements Filter {
         } else {
             try {
                 PrintStream ps = new PrintStream(response.getOutputStream());
-                t.printStackTrace(ps);
+//                t.printStackTrace(ps);
                 ps.close();
                 response.getOutputStream().close();
             } catch (Exception ex) {
@@ -252,7 +244,7 @@ public class DispatchFilter implements Filter {
         try {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
-            t.printStackTrace(pw);
+//            t.printStackTrace(pw);
             pw.close();
             sw.close();
             stackTrace = sw.getBuffer().toString();

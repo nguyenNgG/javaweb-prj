@@ -19,6 +19,8 @@
                 <input type="submit" value="Logout" name="btAction" />
             </form>
         </h2>
+        <a href="viewBookstore">Click here to view bookstore.</a> <br/>
+        <a href="searchPage">Click here to view search page.</a> <br/> <br/>
         <form action="searchOrder">
             Search Value <input type="text" name="txtSearchOrderValue" 
                                 value="${param.txtSearchOrderValue}" /> <br/>

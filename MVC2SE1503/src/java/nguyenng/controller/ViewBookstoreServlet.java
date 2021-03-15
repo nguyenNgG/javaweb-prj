@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
@@ -43,20 +44,27 @@ public class ViewBookstoreServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String url = SHOPPING_PAGE;
+        
+        Map<String, String> listUrl = (Map<String, String>) request
+                .getServletContext()
+                .getAttribute("URL_MAPPING");
+        
+        String url = listUrl.get(SHOPPING_PAGE);
         try {
             ProductDAO dao = new ProductDAO();
             dao.viewBookstore();
             List<ProductDTO> result = dao.getProductList();
             request.setAttribute("BOOKSTORE_VIEW", result);
+            RequestDispatcher rd = request.getRequestDispatcher(url);
+            rd.forward(request, response);
         } catch (SQLException ex) {
-            log("ViewBookstoreServlet: SQLException " + ex.getMessage());
+            log("ViewBookstoreServlet _ SQLException: " + ex.getCause());
+            response.sendError(461);
         } catch (NamingException ex) {
-            log("ViewBookstoreServlet: NamingException " + ex.getMessage());
+            log("ViewBookstoreServlet _ NamingException: " + ex.getCause());
+            response.sendError(461);
         } finally {
-//            RequestDispatcher rd = request.getRequestDispatcher(url);
-//            rd.forward(request, response);
-            response.sendRedirect(url);
+//            response.sendRedirect(url);
             out.close();
         }
     }

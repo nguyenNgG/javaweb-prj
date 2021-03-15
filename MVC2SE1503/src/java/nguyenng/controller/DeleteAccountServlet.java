@@ -8,6 +8,7 @@ package nguyenng.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Map;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,6 +25,8 @@ import nguyenng.registration.RegistrationDAO;
 public class DeleteAccountServlet extends HttpServlet {
 
     private final String SEARCH_PAGE = "searchPage";
+    private final String SEARCH_CONTROLLER = "search";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -40,24 +43,32 @@ public class DeleteAccountServlet extends HttpServlet {
 
         String username = request.getParameter("pk");
         String searchValue = request.getParameter("lastSearch"); //lay tu search.jsp
-        String url = SEARCH_PAGE;
+
+        Map<String, String> listUrl = (Map<String, String>) request
+                .getServletContext()
+                .getAttribute("URL_MAPPING");
+
+        String url = listUrl.get(SEARCH_PAGE);
 
         try {
             RegistrationDAO dao = new RegistrationDAO();
             boolean result = dao.deleteAccount(username);
             if (result) {
                 //call Search function again using urlRewriting
-                url = "search"
-                        + "?btAction=Search"
-                        + "&txtSearchValue=" + searchValue; //lastSearch value mapped o tren
-                
+                url = listUrl.get(SEARCH_CONTROLLER)
+                        //                        + "?btAction=Search"
+                        + "?txtSearchValue=" + searchValue; //lastSearch value mapped o tren
+
             }
-        } catch (SQLException ex) {
-            log("DeleteAccountServlet: SQLException " + ex.getMessage());
-        } catch (NamingException ex) {
-            log("DeleteAccountServlet: NamingException " + ex.getMessage());
-        } finally {
             response.sendRedirect(url);
+        } catch (SQLException ex) {
+            log("DeleteAccountServlet _ SQLException: " + ex.getCause());
+            response.sendError(461);
+        } catch (NamingException ex) {
+            log("DeleteAccountServlet _ NamingException: " + ex.getCause());
+            response.sendError(461);
+        } finally {
+            
             //k dung requestdispatcher de tranh bi trung parameter btAction
             //trung parameter se tao mang k co thu tu, chi lay dc thang dau tien
             out.close();
