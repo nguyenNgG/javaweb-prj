@@ -62,10 +62,10 @@ public class DeleteAccountServlet extends HttpServlet {
             }
             response.sendRedirect(url);
         } catch (SQLException ex) {
-            log("DeleteAccountServlet _ SQLException: " + ex.getCause());
+            log("DeleteAccountServlet _ SQLException: ", ex.getCause());
             response.sendError(461);
         } catch (NamingException ex) {
-            log("DeleteAccountServlet _ NamingException: " + ex.getCause());
+            log("DeleteAccountServlet _ NamingException: ", ex.getCause());
             response.sendError(461);
         } finally {
             

@@ -71,10 +71,10 @@ public class SearchOrderServlet extends HttpServlet {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
         } catch (SQLException ex) {
-            log("SearchOrderServlet _ SQLException: " + ex.getCause());
+            log("SearchOrderServlet _ SQLException: " , ex.getCause());
             response.sendError(461);
         } catch (NamingException ex) {
-            log("SearchOrderServlet _ NamingException: " + ex.getCause());
+            log("SearchOrderServlet _ NamingException: ",ex.getCause());
             response.sendError(461);
         } finally {
             

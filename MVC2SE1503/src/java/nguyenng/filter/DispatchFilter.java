@@ -10,7 +10,6 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Map;
-import java.util.Set;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -133,9 +132,7 @@ public class DispatchFilter implements Filter {
                 String resource = uri.substring(lastIndex + 1);
                 if (resource.length() > 0) {
                     resourceKey = resource.substring(0);
-                    System.out.println("Received resource key: " + resourceKey);
                     url = this.listUrl.get(resourceKey);
-                    System.out.println("Using value: " + url);
                 }
 
             }
@@ -156,6 +153,8 @@ public class DispatchFilter implements Filter {
             // we still want to execute our after processing, and then
             // rethrow the problem after that.
             problem = t;
+            String errMsg = t.getMessage();
+            log(errMsg);
 //            t.printStackTrace();
         }
 

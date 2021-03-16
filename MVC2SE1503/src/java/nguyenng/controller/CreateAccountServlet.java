@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -89,7 +87,7 @@ public class CreateAccountServlet extends HttpServlet {
             rd.forward(request, response);
         } catch (SQLException ex) {
             String errMsg = ex.getMessage();
-            log("CreateAccountServlet _ SQLException: " + ex.getCause());
+            log("CreateAccountServlet _ SQLException: ", ex.getCause());
             if (errMsg.contains("duplicate")) {
                 errors.setUsernameIsExistedErr(username + " existed.");
                 request.setAttribute("CREATE_ERROR", errors);
@@ -97,7 +95,7 @@ public class CreateAccountServlet extends HttpServlet {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
         } catch (NamingException ex) {
-            log("CreateAccountServlet _ NamingException: " + ex.getCause());
+            log("CreateAccountServlet _ NamingException: ", ex.getCause());
             response.sendError(461);
         } finally {
 //            response.sendRedirect(url);

@@ -78,10 +78,10 @@ public class LoginServlet extends HttpServlet {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
         } catch (SQLException ex) {
-            log("LoginServlet _ SQLException: " + ex.getCause());
+            log("LoginServlet _ SQLException: ", ex.getCause());
             response.sendError(461);
         } catch (NamingException ex) {
-            log("LoginServlet _ NamingException: " + ex.getCause());
+            log("LoginServlet _ NamingException: ", ex.getCause());
             response.sendError(461);
         } finally {
 //            response.sendRedirect(url); 

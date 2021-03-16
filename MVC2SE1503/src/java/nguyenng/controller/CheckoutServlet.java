@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.Map;
-import java.util.Random;
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -68,8 +67,7 @@ public class CheckoutServlet extends HttpServlet {
 
         //create orderID
         //orderID format is ORDERx
-        //x is randomly generated number between 0 and 2000
-        //a DAO methods check if the orderID is taken
+        //x is number from 0 to maximum in table
         //if taken, generate another one and try checking again
         //if there are no more available IDs to assign
         //log to server and break
@@ -83,9 +81,9 @@ public class CheckoutServlet extends HttpServlet {
             //end while if available order ID is found
         } catch (SQLException ex) {
             log("CheckoutServlet _ SQLException: "
-                    + ex.getMessage() + "\n" + ex.getCause());
+                    + ex.getMessage() + "\n", ex.getCause());
         } catch (NamingException ex) {
-            log("CheckoutServlet _ NamingException: " + ex.getCause());
+            log("CheckoutServlet _ NamingException: ", ex.getCause());
         }
 
         try {
@@ -148,15 +146,15 @@ public class CheckoutServlet extends HttpServlet {
             rd.forward(request, response);
         } catch (SQLException ex) {
             String errMsg = ex.getMessage();
-            log("CheckoutServlet _ SQLException " + ex.getCause());
+            log("CheckoutServlet _ SQLException: ", ex.getCause());
             if (errMsg.contains("Order_Details")) {
                 try {
                     od_dDAO.deleteOrderDetails(orderID);
                 } catch (SQLException ex1) {
-                    log("CheckoutServlet _ SQLException " + ex1.getCause());
+                    log("CheckoutServlet _ SQLException: ", ex1.getCause());
                     response.sendError(461);
                 } catch (NamingException ex1) {
-                    log("CheckoutServlet _ NamingException " + ex1.getCause());
+                    log("CheckoutServlet _ NamingException: ", ex1.getCause());
                     response.sendError(461);
                 }
             }
@@ -164,16 +162,16 @@ public class CheckoutServlet extends HttpServlet {
                 try {
                     odDAO.deleteOrder(orderID);
                 } catch (SQLException ex1) {
-                    log("CheckoutServlet _ SQLException " + ex1.getCause());
+                    log("CheckoutServlet _ SQLException: ", ex1.getCause());
                     response.sendError(461);
                 } catch (NamingException ex1) {
-                    log("CheckoutServlet _ NamingException " + ex1.getCause());
+                    log("CheckoutServlet _ NamingException: ", ex1.getCause());
                     response.sendError(461);
                 }
             }
             response.sendError(461);
         } catch (NamingException ex) {
-            log("CheckoutServlet _ NamingException " + ex.getCause());
+            log("CheckoutServlet _ NamingException: ", ex.getCause());
             response.sendError(461);
         } finally {
 

@@ -77,10 +77,10 @@ public class StartupServlet extends HttpServlet {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
         } catch (SQLException ex) {
-            log("StartupServlet _ SQLException: " + ex.getCause());
+            log("StartupServlet _ SQLException: ", ex.getCause());
             response.sendError(461);
         } catch (NamingException ex) {
-            log("StartupServlet _ SQLException: " + ex.getCause());
+            log("StartupServlet _ SQLException: ", ex.getCause());
             response.sendError(461);
         } finally {
             //dung rd hay redirect cung dc
