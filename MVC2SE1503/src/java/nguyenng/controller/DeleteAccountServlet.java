@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.Map;
 import javax.naming.NamingException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -60,7 +61,8 @@ public class DeleteAccountServlet extends HttpServlet {
                         + "?txtSearchValue=" + searchValue; //lastSearch value mapped o tren
 
             }
-            response.sendRedirect(url);
+            RequestDispatcher rd = request.getRequestDispatcher(url);
+            rd.forward(request, response);
         } catch (SQLException ex) {
             log("DeleteAccountServlet _ SQLException: ", ex.getCause());
             response.sendError(561);

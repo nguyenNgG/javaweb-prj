@@ -143,7 +143,6 @@ public class DispatchFilter implements Filter {
             
             if (url != null) {
                 RequestDispatcher rd = request.getRequestDispatcher(url);
-                System.out.println(url);
                 rd.forward(request, response);
             } else {
                 chain.doFilter(request, response);

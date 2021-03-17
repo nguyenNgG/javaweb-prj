@@ -59,7 +59,6 @@ public class UpdateAccountServlet extends HttpServlet {
         boolean foundErr = false;
 
         try {
-            System.out.println(chkAdmin);
             if (chkAdmin != null) {
                 role = true;
             }
@@ -91,7 +90,6 @@ public class UpdateAccountServlet extends HttpServlet {
             log("UpdateAccountServlet _ NamingException: ", ex.getCause());
             response.sendError(561);
         } finally {
-            
             out.close();
         }
     }

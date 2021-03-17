@@ -89,7 +89,10 @@ public class Order_DetailsDAO implements Serializable {
                 con.rollback();
             } catch (SQLException ex_rollback) {
                 System.out.println("Order_DetailsDAO _ SQLException: "
-                        + ex.getMessage());
+                        + ex_rollback.getMessage());
+            } catch (NullPointerException ex_null) {
+                System.out.println("Order_DetailsDAO _ NullPointerException: "
+                        + ex_null.getMessage());
             }
         } finally {
             con.setAutoCommit(true);

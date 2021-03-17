@@ -143,6 +143,8 @@ public class CheckoutServlet extends HttpServlet {
                                 if (!order_details_add_result) {
                                     // removing order
                                     orderDAO.deleteOrder(orderID);
+                                    response.sendError(561);
+                                    return;
                                 } // end if add order details failed
                             } // end if added order successfully
                         } // end if items existed in cart
