@@ -8,6 +8,7 @@ package nguyenng.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
@@ -18,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import nguyenng.cart.CartObj;
-import nguyenng.checkout.CheckoutDAO;
 import nguyenng.order.OrderDAO;
 import nguyenng.order.OrderInsertErr;
 import nguyenng.order_details.Order_DetailsDAO;
@@ -53,25 +53,112 @@ public class CheckoutServlet extends HttpServlet {
         Map<String, String> listUrl = (Map<String, String>) request
                 .getServletContext()
                 .getAttribute("URL_MAPPING");
-
         String url = listUrl.get(VIEW_CART_PAGE);
+        /*
+            Order Table
+            ID = orderID
+            NAME = custName
+            ADDRESS = custAddress
+        
+            --
+            Order_Details Table
+            ID = orderID
+            Quantity = quantity
+            PID = productID
+        
+            --
+            Product Table
+            PID = productID
+        
+         */
+
         //0. Cust information
         boolean bErr = false;
         String custName = request.getParameter("txtCustName");
         String custAddress = request.getParameter("txtAddress");
+
         OrderInsertErr errors = new OrderInsertErr();
 
         try {
-            
-            //call DAO
-            CheckoutDAO dao = new CheckoutDAO();
-//            dao.checkout();
+            if (custName.trim().length() < 2 || custName.trim().length() > 50) {
+                bErr = true;
+                errors.setNameLengthErr("Name must have a length of 2-50 characters");
+            }
+            if (custAddress.trim().length() < 6
+                    || custAddress.trim().length() > 30) {
+                bErr = true;
+                errors.setAddressLengthErr("Address must have a length of 6-30 characters");
+            }
+            if (bErr) {
+                request.setAttribute("CHECKOUT_ERROR", errors);
+            } else {
+                //Initialize productDAO and order_detailsDAO
+                ProductDAO productDAO = new ProductDAO();
+                Order_DetailsDAO order_detailsDAO = new Order_DetailsDAO();
+                //call orderDAO, get orderID
+                OrderDAO orderDAO = new OrderDAO();
+                String orderID = "ORDER";
+                int count = 0;
+                do {
+                    ++count;
+                    orderID = "ORDER" + count;
+                } while (orderDAO.isOrderIDTaken(orderID));
+                //end while if available order ID is found
+
+                // Product list (ProductID, Quantity)
+                Map<String, Integer> productList = null;
+                // 1. Customer goes to cart place
+                HttpSession session = request.getSession();
+                if (session != null) {
+                    // 2. Customer takes cart (CartObj)
+                    CartObj cart = (CartObj) session.getAttribute("CART");
+                    if (cart != null) {
+                        // 3. Customer takes items in cart
+                        Map<String, Integer> items = cart.getItems();
+                        if (items != null) {
+                            // 4. Traverse each item in cart
+                            for (String title : items.keySet()) {
+                                int quantity = items.get(title);
+                                String productID = productDAO
+                                        .getProductIDFromName(title);
+                                if (productList == null) {
+                                    productList = new HashMap<>();
+                                }
+                                productList.put(productID, quantity);
+                            } // end traversing items in cart
+                            // insert order into table
+                            boolean order_add_result = orderDAO
+                                    .addOrder(orderID, custName, custAddress);
+                            if (order_add_result) {
+                                // insert order details
+                                boolean order_details_add_result
+                                        = order_detailsDAO
+                                                .addOrderDetails(orderID, productList);
+                                if (order_details_add_result) {
+                                    //5. Container destroy attribute 
+                                    session.removeAttribute("CART");
+                                    //6. Cust view invoice and return to go shopping
+                                    url = listUrl.get(INVOICE_PAGE);
+                                } // end if added order details successfully
+                                if (!order_details_add_result) {
+                                    // removing order
+                                    orderDAO.deleteOrder(orderID);
+                                } // end if add order details failed
+                            } // end if added order successfully
+                        } // end if items existed in cart
+                    } // end if cart existed
+                } // end if session existed
+            } // end if no customer input error found
+            RequestDispatcher rd = request.getRequestDispatcher(url);
+            rd.forward(request, response);
         } catch (SQLException ex) {
             log("CheckoutServlet _ SQLException: ", ex.getCause());
+            response.sendError(561);
         } catch (NamingException ex) {
             log("CheckoutServlet _ NamingException: ", ex.getCause());
+            response.sendError(561);
         } finally {
-            
+            out.close();
         }
 
 //        //new DAO

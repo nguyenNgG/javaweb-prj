@@ -57,10 +57,10 @@ public class ViewBookstoreServlet extends HttpServlet {
             rd.forward(request, response);
         } catch (SQLException ex) {
             log("ViewBookstoreServlet _ SQLException: ", ex.getCause());
-            response.sendError(461);
+            response.sendError(561);
         } catch (NamingException ex) {
             log("ViewBookstoreServlet _ NamingException: ", ex.getCause());
-            response.sendError(461);
+            response.sendError(561);
         } finally {
 //            response.sendRedirect(url);
             out.close();

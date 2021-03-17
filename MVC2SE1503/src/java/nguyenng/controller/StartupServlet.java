@@ -78,10 +78,10 @@ public class StartupServlet extends HttpServlet {
             rd.forward(request, response);
         } catch (SQLException ex) {
             log("StartupServlet _ SQLException: ", ex.getCause());
-            response.sendError(461);
+            response.sendError(561);
         } catch (NamingException ex) {
             log("StartupServlet _ SQLException: ", ex.getCause());
-            response.sendError(461);
+            response.sendError(561);
         } finally {
             //dung rd hay redirect cung dc
             //gia tri luu tru trong cookie k bi mat khi tra response

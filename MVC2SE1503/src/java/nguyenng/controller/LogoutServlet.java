@@ -8,6 +8,7 @@ package nguyenng.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,9 +23,8 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "LogoutServlet", urlPatterns = {"/LogoutServlet"})
 public class LogoutServlet extends HttpServlet {
 
-    
-    
     private final String LOGIN_PAGE = "loginPage";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -42,16 +42,17 @@ public class LogoutServlet extends HttpServlet {
         Map<String, String> listUrl = (Map<String, String>) request
                 .getServletContext()
                 .getAttribute("URL_MAPPING");
-        
+
         String url = listUrl.get(LOGIN_PAGE);
-        
+
         try {
             HttpSession session = request.getSession();
             if (session != null) {
                 session.invalidate();
-                response.sendRedirect(url);
             }
         } finally {
+            RequestDispatcher rd = request.getRequestDispatcher(url);
+            rd.forward(request, response);
             out.close();
         }
     }

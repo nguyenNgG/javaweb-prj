@@ -64,10 +64,10 @@ public class SearchLastnameServlet extends HttpServlet {
             rd.forward(request, response);
         } catch (SQLException ex) {
             log("SearchLastnameServlet _ SQLException: ", ex.getCause());
-            response.sendError(461);
+            response.sendError(561);
         } catch (NamingException ex) {
             log("SearchLastnameServlet _ NamingException: ", ex.getCause());
-            response.sendError(461);
+            response.sendError(561);
         } finally {
 //            response.sendRedirect(url);
             

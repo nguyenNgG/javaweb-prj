@@ -10,8 +10,6 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -72,10 +70,10 @@ public class SearchOrderServlet extends HttpServlet {
             rd.forward(request, response);
         } catch (SQLException ex) {
             log("SearchOrderServlet _ SQLException: " , ex.getCause());
-            response.sendError(461);
+            response.sendError(561);
         } catch (NamingException ex) {
             log("SearchOrderServlet _ NamingException: ",ex.getCause());
-            response.sendError(461);
+            response.sendError(561);
         } finally {
             
 //            response.sendRedirect(url);

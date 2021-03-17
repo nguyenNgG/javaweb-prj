@@ -96,7 +96,7 @@ public class CreateAccountServlet extends HttpServlet {
             rd.forward(request, response);
         } catch (NamingException ex) {
             log("CreateAccountServlet _ NamingException: ", ex.getCause());
-            response.sendError(461);
+            response.sendError(561);
         } finally {
 //            response.sendRedirect(url);
             

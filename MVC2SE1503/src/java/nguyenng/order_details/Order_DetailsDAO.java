@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.naming.NamingException;
 import nguyenng.utils.DBHelpers;
 
@@ -28,13 +29,25 @@ public class Order_DetailsDAO implements Serializable {
         return this.order_Details_List;
     }
 
-    public boolean addOrderDetails(String orderID, String productID, int quantity) throws SQLException, NamingException {
+    public boolean addOrderDetails(String orderID, Map<String, Integer> productList) throws SQLException, NamingException {
+        /*
+            --
+            Order_Details Table
+            ID = orderID
+            Quantity = quantity
+            PID = productID
+        
+         */
         Connection con = null;
         PreparedStatement stm = null;
 
         try {
-            //1. Connect DB using method built
+            //1.1 Create connection using method built
             con = DBHelpers.makeConnection();
+            //1.2 Configure so that statement is 
+            // committed on completion, not on execution 
+            con.setAutoCommit(false);
+
             if (con != null) {
                 //2. Create SQL String
                 String sql = "INSERT INTO "
@@ -42,17 +55,44 @@ public class Order_DetailsDAO implements Serializable {
                         + "VALUES(?, ?, ?)";
                 //3. Create Statement
                 stm = con.prepareStatement(sql);
-                stm.setString(1, orderID);
-                stm.setInt(2, quantity);
-                stm.setString(3, productID);
-                //4. Execute Update and get int
-                int result = stm.executeUpdate();
+                for (String productID : productList.keySet()) {
+                    stm.setString(1, orderID);
+                    stm.setInt(2, productList.get(productID));
+                    stm.setString(3, productID);
+                    // add statement to batch
+                    stm.addBatch();
+                    // flush parameter (safety measure)
+                    stm.clearParameters();
+                }
+                //4. Execute Update and get int array 
+                // (each int element correspond to a statement in the batch
+                // arranged in the order added)
+                int[] result = stm.executeBatch();
+                con.commit();
                 //5. Process result
-                if (result > 0) {
+                boolean foundFail = false;
+                // traverse result to see if any statement failed (0 row affected)
+                for (int i : result) {
+                    if (i == 0) {
+                        foundFail = true;
+                    }
+                } // end traverse result
+                if (!foundFail) {
                     return true;
-                }//end if result existed
+                } // end if all statement executed successfully (no failed)
             }//end if con existed
+        } catch (SQLException ex) {
+            System.out.println("Order_DetailsDAO _ SQLException: "
+                    + ex.getMessage());
+            // An error occurred, attempt to rollback
+            try {
+                con.rollback();
+            } catch (SQLException ex_rollback) {
+                System.out.println("Order_DetailsDAO _ SQLException: "
+                        + ex.getMessage());
+            }
         } finally {
+            con.setAutoCommit(true);
             if (stm != null) {
                 stm.close();
             }

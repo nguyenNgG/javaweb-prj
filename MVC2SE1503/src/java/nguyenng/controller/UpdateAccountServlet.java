@@ -86,10 +86,10 @@ public class UpdateAccountServlet extends HttpServlet {
             rd.forward(request, response);
         } catch (SQLException ex) {
             log("UpdateAccountServlet _ SQLException: ", ex.getCause());
-            response.sendError(461);
+            response.sendError(561);
         } catch (NamingException ex) {
             log("UpdateAccountServlet _ NamingException: ", ex.getCause());
-            response.sendError(461);
+            response.sendError(561);
         } finally {
             
             out.close();

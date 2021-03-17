@@ -63,14 +63,14 @@ public class DeleteAccountServlet extends HttpServlet {
             response.sendRedirect(url);
         } catch (SQLException ex) {
             log("DeleteAccountServlet _ SQLException: ", ex.getCause());
-            response.sendError(461);
+            response.sendError(561);
         } catch (NamingException ex) {
             log("DeleteAccountServlet _ NamingException: ", ex.getCause());
-            response.sendError(461);
+            response.sendError(561);
         } finally {
-            
             //k dung requestdispatcher de tranh bi trung parameter btAction
-            //trung parameter se tao mang k co thu tu, chi lay dc thang dau tien
+            //trung parameter se tao mang k co thu tu, chi lay dc phan tu dau tien
+            //response.sendRedirect(url);
             out.close();
         }
     }
