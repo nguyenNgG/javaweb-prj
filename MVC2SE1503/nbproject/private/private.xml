@@ -13,9 +13,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/E:/Laptrinh/Servlet/javaweb-prj/MVC2SE1503/src/java/nguyenng/order_details/Order_DetailsDAO.java</file>
-            <file>file:/E:/Laptrinh/Servlet/javaweb-prj/MVC2SE1503/src/java/nguyenng/checkout/CheckoutDAO.java</file>
+            <file>file:/E:/Laptrinh/Servlet/javaweb-prj/MVC2SE1503/web/orderInvoice.jsp</file>
             <file>file:/E:/Laptrinh/Servlet/javaweb-prj/MVC2SE1503/src/java/nguyenng/order/OrderDAO.java</file>
             <file>file:/E:/Laptrinh/Servlet/javaweb-prj/MVC2SE1503/src/java/nguyenng/controller/CheckoutServlet.java</file>
+            <file>file:/E:/Laptrinh/Servlet/javaweb-prj/MVC2SE1503/src/java/nguyenng/product/ProductDAO.java</file>
+            <file>file:/E:/Laptrinh/Servlet/javaweb-prj/MVC2SE1503/src/java/nguyenng/order_details/Order_DetailsDTO.java</file>
         </group>
     </open-files>
 </project-private>

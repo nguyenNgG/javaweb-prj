@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
@@ -22,6 +23,7 @@ import nguyenng.cart.CartObj;
 import nguyenng.order.OrderDAO;
 import nguyenng.order.OrderInsertErr;
 import nguyenng.order_details.Order_DetailsDAO;
+import nguyenng.order_details.Order_DetailsDTO;
 import nguyenng.product.ProductDAO;
 
 /**
@@ -137,6 +139,16 @@ public class CheckoutServlet extends HttpServlet {
                                 if (order_details_add_result) {
                                     //5. Container destroy attribute 
                                     session.removeAttribute("CART");
+                                    
+                                    //5a. Get purchased products by searching with orderID
+                                    order_detailsDAO.searchOrder_Details(orderID);
+                                    List<Order_DetailsDTO> orderList = order_detailsDAO.getOrder_Details_List();
+                                    //5b. Get bookstore list
+                                    //5c. Set attribute for invoice information
+                                    request.setAttribute("CUST_ORDERID", orderID);
+                                    request.setAttribute("CUST_CUSTNAME", custName);
+                                    request.setAttribute("CUST_CUSTADDRESS", custAddress);
+                                    request.setAttribute("CUST_ORDERINVOICE", orderList);
                                     //6. Cust view invoice and return to go shopping
                                     url = listUrl.get(INVOICE_PAGE);
                                 } // end if added order details successfully

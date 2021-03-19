@@ -12,14 +12,6 @@
         <filter-name>DispatchFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-    <!--    <filter>
-        <filter-name>WrapperFilter</filter-name>
-        <filter-class>nguyenng.filter.WrapperFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>WrapperFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>-->
     <listener>
         <listener-class>nguyenng.context.MVC2ContextListener</listener-class>
     </listener>

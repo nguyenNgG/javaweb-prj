@@ -5,7 +5,6 @@
  */
 package nguyenng.order_details;
 
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -153,6 +152,49 @@ public class Order_DetailsDAO implements Serializable {
                         + "FROM Order_Details";
                 //3. Create Statement
                 stm = con.prepareStatement(sql);
+                //4. Execute Query and get ResultSet
+                rs = stm.executeQuery();
+                //5. Process ResultSet
+                while (rs.next()) {
+                    String id = rs.getString("ID");
+                    int quantity = rs.getInt("Quantity");
+                    String productID = rs.getString("PID");
+                    Order_DetailsDTO dto = new Order_DetailsDTO(id, productID, quantity);
+                    if (this.order_Details_List == null) {
+                        this.order_Details_List = new ArrayList<>();
+                    } //end if order_details list not existed
+                    this.order_Details_List.add(dto);
+                }//end if while traversing result
+            }//end if con existed
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+    }
+
+    public void searchOrder_Details(String orderID) throws SQLException, NamingException {
+        Connection con = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+
+        try {
+            //1. Connect DB using method built
+            con = DBHelpers.makeConnection();
+            if (con != null) {
+                //2. Create SQL String
+                String sql = "SELECT ID, Quantity, PID "
+                        + "FROM Order_Details "
+                        + "WHERE ID LIKE ?";
+                //3. Create Statement
+                stm = con.prepareStatement(sql);
+                stm.setString(1, orderID);
                 //4. Execute Query and get ResultSet
                 rs = stm.executeQuery();
                 //5. Process ResultSet

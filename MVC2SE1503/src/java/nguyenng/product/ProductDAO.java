@@ -80,4 +80,17 @@ public class ProductDAO implements Serializable {
         }
         return productID;
     }
+
+    public String getProductNameFromID(String productID) throws SQLException, NamingException {
+        String productName = "";
+        if (this.productList == null) {
+            viewBookstore();
+        }
+        for (ProductDTO dto : this.productList) {
+            if (dto.getProductID().equals(productID)) {
+                productName = dto.getProductName();
+            }
+        }
+        return productName;
+    }
 }
