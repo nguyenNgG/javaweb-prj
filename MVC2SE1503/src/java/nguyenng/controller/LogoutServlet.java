@@ -34,6 +34,11 @@ public class LogoutServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    /*
+        1. get session (f)
+        2. invalidate session
+        3. login page
+    */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -46,7 +51,7 @@ public class LogoutServlet extends HttpServlet {
         String url = listUrl.get(LOGIN_PAGE);
 
         try {
-            HttpSession session = request.getSession();
+            HttpSession session = request.getSession(false);
             if (session != null) {
                 session.invalidate();
             }

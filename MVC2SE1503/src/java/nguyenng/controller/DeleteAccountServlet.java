@@ -37,6 +37,10 @@ public class DeleteAccountServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    /*
+        1. new DAO, delete account with pk
+        2. search again
+    */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");

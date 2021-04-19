@@ -9,6 +9,7 @@ import nguyenng.cart.CartObj;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,6 +35,15 @@ public class AddBookToCartServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    /*
+        1. Cust goes to cart place (tr)
+        2. Cust takes cart
+        3. If cart not exist, create cart
+        4. Cust select/grab items
+        5. Cust drop item into cart
+        6. Server update cart
+        7. Cust continue shopping
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -46,7 +56,7 @@ public class AddBookToCartServlet extends HttpServlet {
         String url = listUrl.get(VIEW_BOOKSTORE_CONTROLLER);
         try {
             //1. Cust goes to cart place
-            // cart must be available so true
+            // cart must be available so parameter is true
             // don't need to check null because it's set to true
             HttpSession session = request.getSession();
             //2a. Cust take cart
@@ -61,7 +71,8 @@ public class AddBookToCartServlet extends HttpServlet {
             cart.addItemToCart(title);
             session.setAttribute("CART", cart); //update on server
             //5. Cust continue shopping
-            response.sendRedirect(url);
+            RequestDispatcher rd = request.getRequestDispatcher(url);
+            rd.forward(request, response);
         } finally {
             out.close();
         }

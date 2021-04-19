@@ -1,6 +1,5 @@
 package nguyenng.cart;
 
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +21,11 @@ public class CartObj implements Serializable {
         return items;
     }
 
+    /*
+        1. Check if cart existed
+        2. Check if item already exist in cart -> increaes quantity
+        3. Update cart
+     */
     public void addItemToCart(String title) {
         //1. Check if cart existed
         if (this.items == null) {
@@ -37,6 +41,11 @@ public class CartObj implements Serializable {
 
     }
 
+    /*
+        1. Check if cart existed
+        2. Check if items exist in cart -> remove items
+        3. if items are empty, null items
+     */
     public void removeItemFromCart(String title) {
         //1. Check if cart existed
         if (this.items == null) {
@@ -50,7 +59,6 @@ public class CartObj implements Serializable {
                 this.items = null;
             }
         }
-        
-        
+
     }
 }

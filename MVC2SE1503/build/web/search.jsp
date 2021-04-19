@@ -86,6 +86,9 @@
                                            <c:if test="${dto.role}">
                                                checked
                                            </c:if>
+                                           <c:if test="${not sessionScope.USER_ROLE}">
+                                               disabled="disabled"
+                                           </c:if>
                                            />
                                 </td>
                                 <td>
@@ -97,15 +100,25 @@
                                             name="lastSearch" 
                                             value="${param.txtSearchValue}"/>
                                     </c:url>
-                                    <a href="${deleteLink}">Delete</a>
+                                    <c:if test="${sessionScope.USER_ROLE}">
+                                        <a href="${deleteLink}">Delete</a>    
+                                    </c:if>
+                                    <c:if test="${not sessionScope.USER_ROLE}">
+                                        N/A
+                                    </c:if>
                                 </td>
                                 <td>
-                                    <input type="submit" value="Update" 
-                                           name="btAction" />
-                                    <input 
-                                        type="hidden" 
-                                        name="lastSearchValue" 
-                                        value="${param.txtSearchValue}" />
+                                    <c:if test="${sessionScope.USER_ROLE}">
+                                        <input type="submit" value="Update" 
+                                               name="btAction" />
+                                        <input 
+                                            type="hidden" 
+                                            name="lastSearchValue" 
+                                            value="${param.txtSearchValue}" />
+                                    </c:if>
+                                    <c:if test="${not sessionScope.USER_ROLE}">
+                                        N/A
+                                    </c:if>
                                 </td>
                             </tr>
                         </form>

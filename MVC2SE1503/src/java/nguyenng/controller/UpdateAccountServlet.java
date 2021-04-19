@@ -38,6 +38,11 @@ public class UpdateAccountServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    /*
+        1. check input for error
+        2. error -> save error, username with error -> search again
+        3. no error, update account -> search again
+    */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");

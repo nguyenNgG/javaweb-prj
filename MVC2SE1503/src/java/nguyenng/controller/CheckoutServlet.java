@@ -35,7 +35,7 @@ public class CheckoutServlet extends HttpServlet {
 
 //    private final String VIEW_BOOKSTORE_CONTROLLER = "DispatchServlet"
 //            + "?btAction=View+Bookstore";
-    private final String INVOICE_PAGE = "invoicePage";
+    private final String RECEIPT_PAGE = "receiptPage";
     private final String VIEW_CART_PAGE = "viewCart";
 
     /**
@@ -46,6 +46,21 @@ public class CheckoutServlet extends HttpServlet {
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
+     */
+    /*
+        1. Check error in checkout input
+        2. new DAOs
+        3. create orderID
+        4. cust go to cart place (f)
+        5. cust takes cart
+        6. cust get items from cart
+        7. traverse and put items (name, quantity and name of items)
+        8. cashier create order for cust
+        9. cashier add items to order
+        10. container remove attribute
+        11. cashier create receipt 
+            (name, addr, orderid, purchased products (orderdetails of orderid))
+        12. cust return shopping seturl
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -104,13 +119,17 @@ public class CheckoutServlet extends HttpServlet {
                 do {
                     ++count;
                     orderID = "ORDER" + count;
+                    if (count == Integer.MAX_VALUE) {
+                        log("CheckoutServlet _ Database: No more available orderID");
+                        response.sendError(561);
+                        return;
+                    }
                 } while (orderDAO.isOrderIDTaken(orderID));
-                //end while if available order ID is found
+                //end while if order ID is already used in DB
 
-                // Product list (ProductID, Quantity)
-                Map<String, Integer> productList = null;
                 // 1. Customer goes to cart place
-                HttpSession session = request.getSession();
+                // false because we don't want to override session
+                HttpSession session = request.getSession(false);
                 if (session != null) {
                     // 2. Customer takes cart (CartObj)
                     CartObj cart = (CartObj) session.getAttribute("CART");
@@ -118,6 +137,9 @@ public class CheckoutServlet extends HttpServlet {
                         // 3. Customer takes items in cart
                         Map<String, Integer> items = cart.getItems();
                         if (items != null) {
+                            // Product list (ProductID, Quantity)
+                            Map<String, Integer> productList = null;
+                            Map<String, String> productIdAndNameList = null;
                             // 4. Traverse each item in cart
                             for (String title : items.keySet()) {
                                 int quantity = items.get(title);
@@ -126,7 +148,11 @@ public class CheckoutServlet extends HttpServlet {
                                 if (productList == null) {
                                     productList = new HashMap<>();
                                 }
+                                if (productIdAndNameList == null) {
+                                    productIdAndNameList = new HashMap<>();
+                                }
                                 productList.put(productID, quantity);
+                                productIdAndNameList.put(productID, title);
                             } // end traversing items in cart
                             // insert order into table
                             boolean order_add_result = orderDAO
@@ -135,22 +161,32 @@ public class CheckoutServlet extends HttpServlet {
                                 // insert order details
                                 boolean order_details_add_result
                                         = order_detailsDAO
-                                                .addOrderDetails(orderID, productList);
+                                                .addOrderDetails(orderID,
+                                                        productList);
                                 if (order_details_add_result) {
                                     //5. Container destroy attribute 
                                     session.removeAttribute("CART");
-                                    
-                                    //5a. Get purchased products by searching with orderID
+
+                                    //5a. Get purchased products by 
+                                    // searching with orderID
                                     order_detailsDAO.searchOrder_Details(orderID);
-                                    List<Order_DetailsDTO> orderList = order_detailsDAO.getOrder_Details_List();
-                                    //5b. Get bookstore list
-                                    //5c. Set attribute for invoice information
-                                    request.setAttribute("CUST_ORDERID", orderID);
-                                    request.setAttribute("CUST_CUSTNAME", custName);
-                                    request.setAttribute("CUST_CUSTADDRESS", custAddress);
-                                    request.setAttribute("CUST_ORDERINVOICE", orderList);
-                                    //6. Cust view invoice and return to go shopping
-                                    url = listUrl.get(INVOICE_PAGE);
+                                    List<Order_DetailsDTO> order_DetailsList
+                                            = order_detailsDAO
+                                                    .getOrder_Details_List();
+                                    //5b. Set attribute for receipt information
+                                    request.setAttribute("CUSTOMER_ORDERID",
+                                            orderID);
+                                    request.setAttribute("CUSTOMER_CUSTNAME",
+                                            custName);
+                                    request.setAttribute("CUSTOMER_CUSTADDRESS",
+                                            custAddress);
+                                    request.setAttribute("CUSTOMER_RECEIPT",
+                                            order_DetailsList);
+                                    request.setAttribute("CUSTOMER_PRODUCTNAMES",
+                                            productIdAndNameList);
+                                    //6. Cust view receipt and 
+                                    // return to go shopping
+                                    url = listUrl.get(RECEIPT_PAGE);
                                 } // end if added order details successfully
                                 if (!order_details_add_result) {
                                     // removing order
@@ -248,8 +284,8 @@ public class CheckoutServlet extends HttpServlet {
 //                                    if (addOrder_Details_result) {
 //                                        //5. Container destroy attribute
 //                                        session.removeAttribute("CART");
-//                                        //6. Cust view invoice and return to go shopping
-//                                        url = listUrl.get(INVOICE_PAGE);
+//                                        //6. Cust view receipt and return to go shopping
+//                                        url = listUrl.get(RECEIPT_PAGE);
 //                                    }//end if add order & order details successfully
 //                                }//end traverse items
 //                            } //end if add order (without details) successfully

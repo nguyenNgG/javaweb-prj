@@ -94,7 +94,6 @@
                         </font> <br/>
                     </c:if> <br/>
                     <input type="submit" value="Checkout" name="btAction" />
-                    <input type="reset" value="Reset" /> <br/>
                 </form>
             </c:if> <%--Items existed--%>
         </c:if> <%--Cart existed--%>

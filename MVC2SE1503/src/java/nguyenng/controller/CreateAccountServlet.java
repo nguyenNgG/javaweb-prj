@@ -38,6 +38,12 @@ public class CreateAccountServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    /*
+        1. check input error
+        1. error ->save error->error page
+        2. no error, new DAO, create new account -> login page
+        2. sqlexception (dup) -> save error -> error page
+    */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");

@@ -40,6 +40,14 @@ public class LoginServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    /*
+        1. check login
+        1. fail -> invalid page
+        2. successful, create session
+        3. save username, fullname, role
+        4. create cookie
+        5. search page
+    */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -68,13 +76,16 @@ public class LoginServlet extends HttpServlet {
                 if (fullname == null) {
                     fullname = username + " (username)";
                 }
+                //get role
+                boolean userRole = dao.getRoleOfUser(username);
                 session.setAttribute("USER_FULLNAME", fullname);
+                session.setAttribute("USER_ROLE", userRole);
                 Cookie cookie = new Cookie(username, password);
                 cookie.setMaxAge(60*3);
                 response.addCookie(cookie);
 //                cookie de remember password, session de quan ly 
 //                quy trinh van hanh network (thao tac)
-            } //end if Login is click
+            } //end if login successful
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
         } catch (SQLException ex) {

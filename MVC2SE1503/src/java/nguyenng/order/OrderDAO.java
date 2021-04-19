@@ -26,7 +26,7 @@ public class OrderDAO implements Serializable {
     public List<OrderDTO> getOrderList() {
         return this.orderList;
     }
-
+ 
     public boolean addOrder(String orderID, String custName, String custAddress) throws SQLException, NamingException {
         Connection con = null;
         PreparedStatement stm = null;
@@ -109,7 +109,7 @@ public class OrderDAO implements Serializable {
             if (con != null) {
                 //2. Create SQL String
                 String sql = "DELETE FROM [Order] "
-                        + "WHERE ID LIKE ?";
+                        + "WHERE ID = ?";
                 //3. Create Statement
                 stm = con.prepareStatement(sql);
                 stm.setString(1, orderID);
@@ -171,6 +171,48 @@ public class OrderDAO implements Serializable {
             }
         }
     }
-    
-    
+
+    public void searchOrder(String orderID) throws SQLException, NamingException {
+        Connection con = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+
+        try {
+            //1. Connect DB using method built
+            con = DBHelpers.makeConnection();
+            if (con != null) {
+                //2. Create SQL String
+                String sql = "SELECT ID, NAME, ADDRESS "
+                        + "FROM [Order] "
+                        + "WHERE ID LIKE ?";
+                //3. Create Statement
+                stm = con.prepareStatement(sql);
+                stm.setString(1, "%" + orderID + "%");
+                //4. Execute Query and get ResultSet
+                rs = stm.executeQuery();
+                //5. Process ResultSet
+                while (rs.next()) {
+                    String id = rs.getString("ID");
+                    String custName = rs.getString("NAME");
+                    String custAddress = rs.getString("ADDRESS");
+                    OrderDTO dto = new OrderDTO(id, custName, custAddress);
+                    if (this.orderList == null) {
+                        this.orderList = new ArrayList<>();
+                    } // end if order list not existed
+                    this.orderList.add(dto);
+                }//end while traversing result
+            }//end if con existed
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+    }
+
 }

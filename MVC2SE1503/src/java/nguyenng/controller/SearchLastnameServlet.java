@@ -17,6 +17,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import nguyenng.registration.RegistrationDAO;
 import nguyenng.registration.RegistrationDTO;
 
@@ -39,6 +40,11 @@ public class SearchLastnameServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    /*
+        1. check input valid
+        2. new DAO, search
+        3. get result from DAO, get user role and save
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -50,6 +56,7 @@ public class SearchLastnameServlet extends HttpServlet {
         String url = listUrl.get(SEARCH_PAGE);
 
         String searchValue = request.getParameter("txtSearchValue");
+        HttpSession session = request.getSession(false);
         try {
             if (searchValue.trim().length() > 0) {
                 RegistrationDAO dao = new RegistrationDAO();
@@ -57,6 +64,10 @@ public class SearchLastnameServlet extends HttpServlet {
 
                 List<RegistrationDTO> result = dao.getAccountList();
                 request.setAttribute("SEARCH_RESULT", result);
+                String username = (String) session.getAttribute("USER_USERNAME");
+                // in case user remove their own admin role
+                boolean userRole = dao.getRoleOfUser(username);
+                session.setAttribute("USER_ROLE", userRole);
                 //send result through Scope
                 url = listUrl.get(SEARCH_PAGE);
             } //end if search Value has value
@@ -70,7 +81,7 @@ public class SearchLastnameServlet extends HttpServlet {
             response.sendError(561);
         } finally {
 //            response.sendRedirect(url);
-            
+
             out.close();
         }
     }

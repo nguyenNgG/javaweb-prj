@@ -22,19 +22,26 @@ import javax.servlet.annotation.WebListener;
  */
 @WebListener
 public class MVC2ContextListener implements ServletContextListener {
-
+    /*
+        contextInitialized is invoked when app is deployed,
+        before app starts
+    */
     @Override
     public void contextInitialized(ServletContextEvent sce) {
+        //ServletContext receive signal about changes to servletcontext
         ServletContext ctx = sce.getServletContext();
-
+        //initialize url map
         Map<String, String> list = null;
-        //from web.xml, inside <context-param> tag
+        //filename from web.xml, inside <context-param> tag
         String filename = ctx.getInitParameter("UrlMappingFile").trim();
         FileReader fr = null; //read file from drive
-        BufferedReader bf = null; //read character stream from buffer memory
+        BufferedReader bf = null; 
+        //get character stream from filereader and put into buffer memory (RAM)
+        // to read
         try {
             fr = new FileReader(filename);
             bf = new BufferedReader(fr);
+            //read from buffer when buffer is not empty
             while (bf.ready()) {
                 String line = bf.readLine();
                 String mapEntry[] = line.split("=");
@@ -72,7 +79,9 @@ public class MVC2ContextListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-
+        //remove attribute before shutting down context
+        ServletContext servletContext = sce.getServletContext();
+        servletContext.removeAttribute("URL_MAPPING");
     }
 
 }

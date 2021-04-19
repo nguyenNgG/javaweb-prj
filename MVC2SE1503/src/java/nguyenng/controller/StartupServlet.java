@@ -39,6 +39,14 @@ public class StartupServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    /*
+        1. get cookies
+        2. traverse cookies
+        3. check login for each cookies
+        4. create session for successful login
+        5. save username, fullname
+        6. searchPage
+    */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");

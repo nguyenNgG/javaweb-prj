@@ -28,7 +28,7 @@ import nguyenng.order_details.Order_DetailsDTO;
  */
 @WebServlet(name = "SearchOrderServlet", urlPatterns = {"/SearchOrderServlet"})
 public class SearchOrderServlet extends HttpServlet {
-    
+
     private final String SEARCH_ORDER_RESULT_PAGE = "searchOrderPage";
 
     /**
@@ -40,42 +40,49 @@ public class SearchOrderServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    /*
+        1. check input valid
+        2. new DAO, search
+        3. get result from DAO and save
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        
+
         Map<String, String> listUrl = (Map<String, String>) request
                 .getServletContext()
                 .getAttribute("URL_MAPPING");
-        
+
         String url = listUrl.get(SEARCH_ORDER_RESULT_PAGE);
-        
+        String searchOrderValue = request.getParameter("txtSearchOrderValue");
+
         try {
-            OrderDAO odDAO = new OrderDAO();
-            Order_DetailsDAO od_dDAO = new Order_DetailsDAO();
-            
-            odDAO.viewOrderList();
-            od_dDAO.viewOrder_Details_List();
-            
-            List<OrderDTO> orderList = odDAO.getOrderList();
-            List<Order_DetailsDTO> order_Details_List = od_dDAO.getOrder_Details_List();
-            
-            request.setAttribute("SEARCH_ORDER", orderList);
-            request.setAttribute("SEARCH_ORDER_DETAILS", order_Details_List);
-            
-            url = listUrl.get(SEARCH_ORDER_RESULT_PAGE);
-            
+            if (searchOrderValue.trim().length() > 0) {
+                OrderDAO odDAO = new OrderDAO();
+                Order_DetailsDAO od_dDAO = new Order_DetailsDAO();
+
+                odDAO.searchOrder(searchOrderValue);
+                od_dDAO.searchOrder_Details_Loose(searchOrderValue);
+
+                List<OrderDTO> orderList = odDAO.getOrderList();
+                List<Order_DetailsDTO> order_Details_List = od_dDAO.getOrder_Details_List();
+
+                request.setAttribute("SEARCH_ORDER", orderList);
+                request.setAttribute("SEARCH_ORDER_DETAILS", order_Details_List);
+
+                url = listUrl.get(SEARCH_ORDER_RESULT_PAGE);
+            }
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
         } catch (SQLException ex) {
-            log("SearchOrderServlet _ SQLException: " , ex.getCause());
+            log("SearchOrderServlet _ SQLException: ", ex.getCause());
             response.sendError(561);
         } catch (NamingException ex) {
-            log("SearchOrderServlet _ NamingException: ",ex.getCause());
+            log("SearchOrderServlet _ NamingException: ", ex.getCause());
             response.sendError(561);
         } finally {
-            
+
 //            response.sendRedirect(url);
             out.close();
         }

@@ -259,7 +259,7 @@ public class RegistrationDAO implements Serializable {
         PreparedStatement stm = null;
         ResultSet rs = null;
         String fullname = null;
-        
+
         try {
             //1. Connect DB
             con = DBHelpers.makeConnection();
@@ -291,5 +291,44 @@ public class RegistrationDAO implements Serializable {
             }
         }
         return fullname;
+    }
+
+    public boolean getRoleOfUser(String username) throws SQLException, NamingException {
+        Connection con = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+
+        try {
+            //1. Connect DB
+            con = DBHelpers.makeConnection();
+            if (con != null) {
+                //2. Create SQL String
+                String sql = "SELECT isAdmin "
+                        + "From Registration "
+                        + "WHERE Username LIKE ?";
+                //3. Create Statement
+                stm = con.prepareStatement(sql);
+                stm.setString(1, username);
+                //4. Execute query and get rs
+                rs = stm.executeQuery();
+                //5. Process result 
+                boolean userRole = false;
+                if (rs.next()) {
+                    userRole = rs.getBoolean("isAdmin");
+                    return userRole;
+                }
+            } //end if con existed
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return false;
     }
 }

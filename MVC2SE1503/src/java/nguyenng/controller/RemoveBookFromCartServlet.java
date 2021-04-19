@@ -35,6 +35,14 @@ public class RemoveBookFromCartServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    /*
+        1. cust goes to cart place
+        2. cust takes cart
+        3. cust takes items
+        4. cust looks at checked items names to remove []
+        5. cust remove items from cart with name
+        6. save cart to server
+    */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");

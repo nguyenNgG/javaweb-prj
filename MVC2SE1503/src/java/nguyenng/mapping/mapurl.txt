@@ -11,7 +11,7 @@ invalid = invalid.html
 
 searchPage = search.jsp
 viewCart = viewCart.jsp
-invoicePage = orderInvoice.jsp
+receiptPage = orderReceipt.jsp
 
 startup = StartupServlet
 

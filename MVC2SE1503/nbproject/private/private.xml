@@ -5,19 +5,21 @@
             <url>src/java/nguyenng/controller/LoginServlet.java</url>
             <bookmark id="1">
                 <name/>
-                <line>73</line>
+                <line>84</line>
                 <key/>
             </bookmark>
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/Laptrinh/Servlet/javaweb-prj/MVC2SE1503/src/java/nguyenng/order_details/Order_DetailsDAO.java</file>
-            <file>file:/E:/Laptrinh/Servlet/javaweb-prj/MVC2SE1503/web/orderInvoice.jsp</file>
-            <file>file:/E:/Laptrinh/Servlet/javaweb-prj/MVC2SE1503/src/java/nguyenng/order/OrderDAO.java</file>
-            <file>file:/E:/Laptrinh/Servlet/javaweb-prj/MVC2SE1503/src/java/nguyenng/controller/CheckoutServlet.java</file>
-            <file>file:/E:/Laptrinh/Servlet/javaweb-prj/MVC2SE1503/src/java/nguyenng/product/ProductDAO.java</file>
-            <file>file:/E:/Laptrinh/Servlet/javaweb-prj/MVC2SE1503/src/java/nguyenng/order_details/Order_DetailsDTO.java</file>
+            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/controller/LoginServlet.java</file>
+            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/registration/RegistrationDAO.java</file>
+            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/web/search.jsp</file>
+            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/registration/RegistrationDTO.java</file>
+            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/order_details/Order_DetailsDAO.java</file>
+            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/order/OrderDAO.java</file>
+            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/controller/SearchLastnameServlet.java</file>
+            <file>file:/D:/JavaWeb/javaweb-prj/MVC2SE1503/src/java/nguyenng/controller/DeleteAccountServlet.java</file>
         </group>
     </open-files>
 </project-private>

@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 public class DispatchFilter implements Filter {
 
     private static final boolean debug = true;
-    private Map<String, String> listUrl;
 
     // The filter configuration object we are associated with.  If
     // this value is null, this filter instance is not currently
@@ -48,7 +47,6 @@ public class DispatchFilter implements Filter {
 //        }
 //        return null;
 //    }
-
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
@@ -116,7 +114,10 @@ public class DispatchFilter implements Filter {
             throws IOException, ServletException {
 
         Throwable problem = null;
+        // initialize map
+        Map<String, String> listUrl = null;
         try {
+            // get map from shared server memory
             ServletContext contextScope = request.getServletContext();
             listUrl = (Map<String, String>) contextScope.getAttribute("URL_MAPPING");
 
@@ -126,21 +127,22 @@ public class DispatchFilter implements Filter {
 
             String resourceKey = null;
 
-            if (this.listUrl != null) {
-                url = this.listUrl.get("default");
+            if (listUrl != null) {
+                // setting default resource
+                url = listUrl.get("default");
                 int lastIndex = uri.lastIndexOf("/");
                 String resource = uri.substring(lastIndex + 1);
                 if (resource.length() > 0) {
                     resourceKey = resource.substring(0);
-                    url = this.listUrl.get(resourceKey);
-                }
+                    url = listUrl.get(resourceKey);
+                } //end if there is resource requested
 
             }
-            if (this.listUrl == null) {
+            if (listUrl == null || url == null) {
                 HttpServletResponse httpResp = (HttpServletResponse) response;
                 httpResp.sendError(404);
             }
-            
+
             if (url != null) {
                 RequestDispatcher rd = request.getRequestDispatcher(url);
                 rd.forward(request, response);

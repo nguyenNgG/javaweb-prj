@@ -28,6 +28,19 @@ public class Order_DetailsDAO implements Serializable {
         return this.order_Details_List;
     }
 
+    /*
+        1. create connection using method built
+        2. turn off auto commit
+        3. create sql string
+        4. create statement
+        5. traverse products cust ordered and add to statement batch (cl)
+        6. execute statement batch
+        7. commit
+        7. if exception, rollback
+        8. check rows for 0, if 0, rollback, ret false
+        9. no 0, return true
+        9. turn on auto commit again
+    */
     public boolean addOrderDetails(String orderID, Map<String, Integer> productList) throws SQLException, NamingException {
         /*
             --
@@ -74,6 +87,7 @@ public class Order_DetailsDAO implements Serializable {
                 for (int i : result) {
                     if (i == 0) {
                         foundFail = true;
+                        con.rollback();
                     }
                 } // end traverse result
                 if (!foundFail) {
@@ -114,9 +128,9 @@ public class Order_DetailsDAO implements Serializable {
             con = DBHelpers.makeConnection();
             if (con != null) {
                 //2. Create SQL String
-                String sql = "SELECT ID "
+                String sql = "DELETE "
                         + "FROM Order_Details "
-                        + "WHERE ID LIKE ?";
+                        + "WHERE ID = ?";
                 //3. Create Statement
                 stm = con.prepareStatement(sql);
                 stm.setString(1, orderID);
@@ -195,6 +209,49 @@ public class Order_DetailsDAO implements Serializable {
                 //3. Create Statement
                 stm = con.prepareStatement(sql);
                 stm.setString(1, orderID);
+                //4. Execute Query and get ResultSet
+                rs = stm.executeQuery();
+                //5. Process ResultSet
+                while (rs.next()) {
+                    String id = rs.getString("ID");
+                    int quantity = rs.getInt("Quantity");
+                    String productID = rs.getString("PID");
+                    Order_DetailsDTO dto = new Order_DetailsDTO(id, productID, quantity);
+                    if (this.order_Details_List == null) {
+                        this.order_Details_List = new ArrayList<>();
+                    } //end if order_details list not existed
+                    this.order_Details_List.add(dto);
+                }//end if while traversing result
+            }//end if con existed
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+    }
+    
+    public void searchOrder_Details_Loose(String orderID) throws SQLException, NamingException {
+        Connection con = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+
+        try {
+            //1. Connect DB using method built
+            con = DBHelpers.makeConnection();
+            if (con != null) {
+                //2. Create SQL String
+                String sql = "SELECT ID, Quantity, PID "
+                        + "FROM Order_Details "
+                        + "WHERE ID LIKE ?";
+                //3. Create Statement
+                stm = con.prepareStatement(sql);
+                stm.setString(1, "%" + orderID + "%");
                 //4. Execute Query and get ResultSet
                 rs = stm.executeQuery();
                 //5. Process ResultSet
